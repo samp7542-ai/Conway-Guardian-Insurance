@@ -336,6 +336,9 @@
   .chip:has(input:checked) .box { background: var(--navy-3); border-color: var(--navy-3); }
   .chip:has(input:checked) .box::after { width: 4px; height: 9px; border-width: 0 2px 2px 0; }
   .q { margin-bottom: 22px; }
+  .q-group { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 12px; margin: 30px 0 16px; }
+  .q-group::after { content: ""; flex: 1; height: 1px; background: var(--line); }
+  .wstep .tag + h2 + .sub + .step-err + .q-group { margin-top: 6px; }
   .q.bad .chips .chip { border-color: #fca5a5; }
   .q .err-msg { display: none; color: var(--danger); font-size: 13px; font-weight: 600; margin-top: 8px; }
   .q.bad .err-msg { display: block; }
@@ -542,7 +545,7 @@
           <p>Pick one or more — bundling can save you money.</p>
           <div class="opts" id="quickOpts"></div>
           <div class="err" id="quickErr">Pick at least one to get started.</div>
-          <button type="submit" class="btn btn-navy btn-lg">Start my quote →</button>
+          <button type="button" class="btn btn-navy btn-lg" id="quickGo">Start my quote →</button>
         </form>
       </div>
     </section>
@@ -701,7 +704,7 @@
             <div class="field"><label for="cf-topic">What's this about?</label>
               <select id="cf-topic"><option>A question about coverage</option><option>Review my current policies</option><option>Make a change to my policy</option><option>Help with a claim</option><option>Something else</option></select></div>
             <div class="field" id="cf-msg-f"><label for="cf-msg">Message</label><textarea id="cf-msg" rows="5"></textarea><div class="err-msg">Please write a short message.</div></div>
-            <button class="btn btn-navy btn-lg" style="width:100%" type="submit">Send message</button>
+            <button class="btn btn-navy btn-lg" style="width:100%" type="button" id="cfSend">Send message</button>
           </form>
         </div>
       </div>
@@ -778,7 +781,7 @@
                 <h2>Review your request</h2>
                 <p class="sub">Make sure everything looks right, then send it over.</p>
                 <div class="review-box" id="reviewBox"></div>
-                <button type="submit" class="btn btn-gold btn-lg" style="width:100%" id="sendBtn">Send my quote request →</button>
+                <button type="button" class="btn btn-gold btn-lg" style="width:100%" id="sendBtn">Send my quote request →</button>
               </section>
 
               <div class="wiz-nav" id="wizNav">
@@ -871,14 +874,6 @@
         ["Can you help if I need an SR-22?", "Yes. Let us know in your quote request and we'll look for carriers that can file it in your state."],
         ["Will adding a teen driver raise my rate a lot?", "It often does, but carriers handle it differently — and good-student and driver-training discounts can help. Comparing carriers matters most here."],
       ],
-      questions: [
-        { id: "vehicles", label: "How many vehicles?", opts: ["1", "2", "3", "4+"] },
-        { id: "drivers", label: "How many drivers?", opts: ["1", "2", "3", "4+"] },
-        { id: "insured", label: "Do you currently have auto insurance?", opts: ["Yes", "No", "It lapsed recently"] },
-        { id: "renewal", label: "When does your current policy renew?", opts: ["Within 30 days", "1–3 months", "3+ months", "Not sure / N/A"] },
-        { id: "incidents", label: "Any accidents or tickets in the last 3 years?", opts: ["No", "Yes, 1", "Yes, 2 or more"] },
-        { id: "sr22", label: "Do you need an SR-22?", opts: ["No", "Yes", "Not sure"] },
-      ],
     },
     homeowners: {
       title: "Homeowners Insurance", short: "Homeowners", blurb: "Your house, your belongings and your liability.",
@@ -897,13 +892,6 @@
         ["How much dwelling coverage do I need?", "Enough to rebuild your home at today's construction costs — which can be very different from what you paid or its market value."],
         ["I'm closing on a house soon. Can you move fast?", "Yes — tell us your closing date in the notes and we'll prioritize getting your lender what they need."],
       ],
-      questions: [
-        { id: "status", label: "Which describes you?", opts: ["I own the home", "I'm buying a home", "Refinancing"] },
-        { id: "type", label: "What type of home?", opts: ["Single-family", "Condo", "Townhouse", "Mobile / manufactured"] },
-        { id: "built", label: "About when was it built?", opts: ["Before 1960", "1960–1989", "1990–2009", "2010 or newer", "Not sure"] },
-        { id: "insured", label: "Is it currently insured?", opts: ["Yes", "No", "Not yet (buying)"] },
-        { id: "extras", label: "Interested in any extras?", multi: true, optional: true, opts: ["Flood", "Earthquake", "Water backup", "Jewelry / valuables", "Umbrella policy"] },
-      ],
     },
     renters: {
       title: "Renters Insurance", short: "Renters", blurb: "Affordable protection for your stuff and liability.",
@@ -919,12 +907,6 @@
         ["Doesn't my landlord's insurance cover my things?", "No. A landlord's policy covers the building and their liability — not your personal belongings."],
         ["Is renters insurance expensive?", "It's typically one of the most affordable kinds of insurance, and it's often cheaper when bundled with auto."],
         ["My landlord needs proof of insurance. Can you send it?", "Yes — once your policy is active we can send proof of coverage directly to your landlord or property manager."],
-      ],
-      questions: [
-        { id: "residence", label: "Where do you live?", opts: ["Apartment", "House", "Condo / townhouse", "Other"] },
-        { id: "belongings", label: "Roughly what are your belongings worth?", opts: ["Under $15,000", "$15,000–$30,000", "$30,000–$50,000", "$50,000+", "Not sure"] },
-        { id: "required", label: "Does your landlord require it?", opts: ["Yes", "No", "Not sure"] },
-        { id: "dog", label: "Do you have a dog?", opts: ["No", "Yes"] },
       ],
     },
     landlord: {
@@ -943,12 +925,6 @@
         ["Can I use my homeowners policy for a rental?", "Usually not. Most homeowners policies exclude or limit coverage once you rent the home out — you'll typically need a landlord (dwelling fire) policy."],
         ["Do you insure short-term rentals like Airbnb?", "Yes. Short-term rentals have different risks, so let us know and we'll find carriers that cover them."],
         ["Can you insure properties in different states?", "Yes — we serve all 50 states, so we can help you manage rentals across state lines with one agent."],
-      ],
-      questions: [
-        { id: "count", label: "How many rental properties?", opts: ["1", "2–4", "5–10", "11+"] },
-        { id: "type", label: "What type of property?", multi: true, opts: ["Single-family", "Duplex / 2–4 units", "5+ unit building", "Condo", "Short-term rental"] },
-        { id: "occupancy", label: "Current occupancy?", opts: ["Rented", "Vacant", "Under renovation", "Mix"] },
-        { id: "insured", label: "Currently insured?", opts: ["Yes", "No", "Some properties"] },
       ],
     },
     business: {
@@ -970,14 +946,118 @@
         ["Do I need workers' compensation?", "Most states require it once you have employees, but the rules vary by state and industry. We'll help you understand what applies to you."],
         ["I need a certificate of insurance for a job. Can you help?", "Yes — once you're covered, we can issue certificates of insurance (COIs) for your clients."],
       ],
+    },
+  };
+  /* ================================================================
+     QUOTE QUESTIONS — tailored per coverage type
+     h: group heading · short: label used in the agency email
+     multi: pick several · text/date: typed answer · optional: not required
+     ================================================================ */
+  const Q = {
+    auto: {
+      title: "Your vehicles & drivers",
+      intro: "A few details about your vehicles and drivers so we can match you with the right carriers.",
       questions: [
-        { id: "industry", label: "What kind of business is it?", text: true, placeholder: "e.g. roofing contractor, coffee shop, IT consulting" },
-        { id: "employees", label: "How many employees?", opts: ["Just me", "2–10", "11–50", "51+"] },
-        { id: "years", label: "How long in business?", opts: ["Just starting", "Under 3 years", "3–10 years", "10+ years"] },
-        { id: "needs", label: "What coverage are you looking for?", multi: true, opts: ["General liability", "BOP", "Workers' comp", "Commercial auto", "Commercial property", "Professional liability", "Cyber", "Not sure — help me"] },
+        { h: "Vehicles" },
+        { id: "vehicles", short: "Vehicles", label: "How many vehicles do you want to insure?", opts: ["1", "2", "3", "4+"] },
+        { id: "vehicleList", short: "Year / make / model", label: "Year, make and model of each", text: true, optional: true, placeholder: "e.g. 2019 Honda CR-V, 2015 Ford F-150" },
+        { id: "use", short: "Vehicle use", label: "How are the vehicles used?", multi: true, opts: ["Commuting", "Pleasure / errands", "Business use", "Rideshare / delivery"] },
+        { id: "ownership", short: "Ownership", label: "Do you own, finance or lease?", multi: true, opts: ["Own outright", "Financed", "Leased"] },
+        { h: "Drivers" },
+        { id: "drivers", short: "Drivers", label: "How many drivers in the household?", opts: ["1", "2", "3", "4+"] },
+        { id: "youngest", short: "Youngest driver", label: "Age of the youngest driver", opts: ["Under 21", "21–24", "25–64", "65+"] },
+        { id: "incidents", short: "Accidents / tickets (3 yrs)", label: "Any accidents or tickets in the last 3 years?", opts: ["None", "1", "2 or more"] },
+        { id: "sr22", short: "SR-22 needed", label: "Does anyone need an SR-22?", opts: ["No", "Yes", "Not sure"] },
+        { h: "Current coverage" },
+        { id: "insured", short: "Currently insured", label: "Do you have auto insurance now?", opts: ["Yes", "No", "Lapsed recently"] },
+        { id: "carrier", short: "Current carrier", label: "Current insurance company", text: true, optional: true, placeholder: "e.g. Progressive" },
+        { id: "renewal", short: "Renews", label: "When does your current policy renew?", opts: ["Within 30 days", "1–3 months", "3+ months", "Not sure / N/A"] },
+        { id: "level", short: "Coverage wanted", label: "What level of coverage are you looking for?", opts: ["State minimum", "Standard", "Full coverage", "Not sure — advise me"] },
+      ],
+    },
+    homeowners: {
+      title: "About your home",
+      intro: "Tell us about the home so we can price coverage that would actually rebuild it.",
+      questions: [
+        { h: "The property" },
+        { id: "status", short: "Status", label: "Which describes you?", opts: ["I own the home", "I'm buying", "Refinancing"] },
+        { id: "closing", short: "Closing date", label: "Closing date (if buying)", date: true, optional: true },
+        { id: "address", short: "Property address", label: "Property street address", text: true, optional: true, placeholder: "123 Main St, City" },
+        { id: "type", short: "Home type", label: "Type of home", opts: ["Single-family", "Condo", "Townhouse", "Mobile / manufactured"] },
+        { id: "occupancy", short: "Occupancy", label: "How is the home used?", opts: ["Primary residence", "Second / vacation home"] },
+        { h: "Construction" },
+        { id: "built", short: "Year built", label: "About when was it built?", opts: ["Before 1960", "1960–1989", "1990–2009", "2010 or newer", "Not sure"] },
+        { id: "sqft", short: "Square feet", label: "Approximate square footage", opts: ["Under 1,500", "1,500–2,500", "2,500–4,000", "4,000+", "Not sure"] },
+        { id: "construction", short: "Construction", label: "Exterior construction", opts: ["Wood / frame", "Brick / masonry", "Stucco", "Siding", "Not sure"] },
+        { id: "roof", short: "Roof age", label: "How old is the roof?", opts: ["Under 5 years", "5–10 years", "10–20 years", "20+ years", "Not sure"] },
+        { h: "Risk & discounts" },
+        { id: "safety", short: "Safety features", label: "Safety features", multi: true, optional: true, opts: ["Monitored alarm", "Smoke / fire alarms", "Sprinklers", "Deadbolts", "Water leak sensors", "Gated community"] },
+        { id: "liability", short: "On the property", label: "Anything on the property?", multi: true, optional: true, opts: ["Pool", "Trampoline", "Dog", "Wood stove", "None of these"] },
+        { id: "claims", short: "Claims (5 yrs)", label: "Home insurance claims in the last 5 years?", opts: ["None", "1", "2 or more"] },
+        { h: "Coverage" },
+        { id: "insured", short: "Currently insured", label: "Is it currently insured?", opts: ["Yes", "No", "Not yet (buying)"] },
+        { id: "extras", short: "Add-ons wanted", label: "Interested in any extras?", multi: true, optional: true, opts: ["Flood", "Earthquake", "Water backup", "Jewelry / valuables", "Umbrella policy"] },
+      ],
+    },
+    renters: {
+      title: "About your rental",
+      intro: "Renters coverage is quick to quote — just a few questions about your place and your stuff.",
+      questions: [
+        { h: "Your place" },
+        { id: "residence", short: "Residence", label: "What do you rent?", opts: ["Apartment", "House", "Condo / townhouse", "Room in a home"] },
+        { id: "household", short: "Who lives there", label: "Who lives with you?", opts: ["Just me", "Spouse / partner", "Family", "Roommates"] },
+        { id: "start", short: "Coverage start", label: "When do you need coverage to start?", opts: ["ASAP", "Within 30 days", "Later — I'm moving"] },
+        { id: "required", short: "Landlord requires proof", label: "Does your landlord require proof of insurance?", opts: ["Yes", "No", "Not sure"] },
+        { h: "Your belongings" },
+        { id: "belongings", short: "Belongings value", label: "Roughly what are your belongings worth?", opts: ["Under $15k", "$15k–$30k", "$30k–$50k", "$50k+", "Not sure"] },
+        { id: "valuables", short: "High-value items", label: "Any high-value items?", multi: true, optional: true, opts: ["Jewelry", "Electronics / cameras", "Bikes / e-bikes", "Musical instruments", "Collectibles / art"] },
+        { h: "Liability" },
+        { id: "liabilityLimit", short: "Liability limit", label: "Liability coverage amount", opts: ["$100,000", "$300,000", "$500,000", "Not sure — advise me"] },
+        { id: "pets", short: "Pets", label: "Any pets?", multi: true, opts: ["No pets", "Dog", "Cat", "Other"] },
+      ],
+    },
+    landlord: {
+      title: "About your rental properties",
+      intro: "Details about your rental properties help us find a landlord policy that protects your income, too.",
+      questions: [
+        { h: "Your portfolio" },
+        { id: "count", short: "Properties", label: "How many rental properties?", opts: ["1", "2–4", "5–10", "11+"] },
+        { id: "units", short: "Total units", label: "Total number of rental units", opts: ["1", "2–4", "5–10", "11–25", "26+"] },
+        { id: "type", short: "Property types", label: "What type of properties?", multi: true, opts: ["Single-family", "Duplex / 2–4 units", "5+ unit building", "Condo", "Mixed-use"] },
+        { id: "locations", short: "Locations", label: "Where are the properties?", text: true, placeholder: "e.g. Atlanta GA, Tampa FL" },
+        { h: "How you rent" },
+        { id: "rentalType", short: "Rental type", label: "Type of rentals", opts: ["Long-term leases", "Short-term (Airbnb / VRBO)", "Mix of both"] },
+        { id: "occupancy", short: "Occupancy", label: "Current occupancy", opts: ["Fully rented", "Partly vacant", "Vacant", "Under renovation"] },
+        { id: "managed", short: "Managed by", label: "Who manages the properties?", opts: ["I self-manage", "Property manager"] },
+        { id: "built", short: "Year built", label: "About when were they built?", opts: ["Before 1960", "1960–1989", "1990–2009", "2010 or newer", "Mixed"] },
+        { h: "Coverage" },
+        { id: "wanted", short: "Coverage wanted", label: "What coverage do you need?", multi: true, opts: ["Building / dwelling", "Loss of rental income", "Landlord liability", "Umbrella", "Flood", "Vacancy coverage", "Not sure — advise me"] },
+        { id: "insured", short: "Currently insured", label: "Are the properties insured now?", opts: ["Yes, all", "Some of them", "No"] },
+        { id: "claims", short: "Claims (5 yrs)", label: "Claims in the last 5 years?", opts: ["None", "1", "2 or more"] },
+      ],
+    },
+    business: {
+      title: "About your business",
+      intro: "Tell us about your business and we'll build the right mix of coverage — no more, no less.",
+      questions: [
+        { h: "Your business" },
+        { id: "name", short: "Business name", label: "Business name", text: true, placeholder: "e.g. Smith Roofing LLC" },
+        { id: "industry", short: "What they do", label: "What does the business do?", text: true, placeholder: "e.g. residential roofing, coffee shop, IT consulting" },
+        { id: "years", short: "Years in business", label: "How long in business?", opts: ["Just starting", "Under 3 years", "3–10 years", "10+ years"] },
+        { id: "location", short: "Operates from", label: "Where do you operate?", multi: true, opts: ["Home-based", "Office", "Retail storefront", "Warehouse / shop", "Job sites / on the road"] },
+        { h: "Size" },
+        { id: "employees", short: "Employees", label: "How many employees (besides you)?", opts: ["None", "1–5", "6–20", "21–50", "51+"] },
+        { id: "revenue", short: "Annual revenue", label: "Approximate annual revenue", opts: ["Under $100k", "$100k–$500k", "$500k–$1M", "$1M–$5M", "$5M+", "Prefer not to say"] },
+        { id: "vehicles", short: "Business vehicles", label: "Vehicles used for the business", opts: ["None", "1–2", "3–10", "11+"] },
+        { h: "Coverage" },
+        { id: "needs", short: "Coverage wanted", label: "What coverage are you looking for?", multi: true, opts: ["General liability", "Business owner's policy (BOP)", "Workers' comp", "Commercial auto", "Commercial property", "Professional liability (E&O)", "Cyber", "Not sure — advise me"] },
+        { id: "coi", short: "Needs a COI", label: "Do you need a certificate of insurance for a client or contract?", opts: ["Yes", "No", "Not yet"] },
+        { id: "insured", short: "Currently insured", label: "Currently insured?", opts: ["Yes", "No", "Some coverage"] },
+        { id: "renewal", short: "Renews", label: "When does current coverage renew?", opts: ["Within 30 days", "1–3 months", "3+ months", "N/A"] },
       ],
     },
   };
+  Object.keys(Q).forEach(k => { COVERAGE[k].questions = Q[k].questions; COVERAGE[k].intro = Q[k].intro; COVERAGE[k].stepTitle = Q[k].title; });
   const KEYS = Object.keys(COVERAGE);
   const STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
 
@@ -1033,6 +1113,7 @@
   $("#covGrid").innerHTML = KEYS.map(k =>
     '<label class="cov-opt"><input type="checkbox" name="cov" value="' + k + '" /><span class="ic">' + icon(k) + "</span><span><b>" + esc(COVERAGE[k].short) + "</b><small>" + esc(COVERAGE[k].blurb) + '</small></span><span class="box"></span></label>').join("");
 
+  const pad2 = (n) => String(n).padStart(2, "0"), td = new Date(), todayStr = td.getFullYear() + "-" + pad2(td.getMonth() + 1) + "-" + pad2(td.getDate());
   $("#state").insertAdjacentHTML("beforeend", STATES.map(s => "<option>" + s + "</option>").join(""));
 
   // One wizard step per coverage type
@@ -1040,23 +1121,25 @@
     const c = COVERAGE[k];
     return '<section class="wstep" data-key="' + k + '" data-name="' + esc(c.short) + '">' +
       '<span class="tag">' + icon(k) + esc(c.title) + "</span>" +
-      "<h2>Tell us about your " + esc(c.short.toLowerCase().replace(" / rental", " property")) + " needs</h2>" +
-      '<p class="sub">Quick answers are fine — your agent will confirm the details.</p>' +
+      "<h2>" + esc(c.stepTitle) + "</h2>" +
+      '<p class="sub">' + esc(c.intro) + ' Best guesses are fine.</p>' +
       '<div class="step-err">Please answer the highlighted questions.</div>' +
       c.questions.map(q => {
+        if (q.h) return '<div class="q-group">' + esc(q.h) + "</div>";
         const name = k + "_" + q.id;
         let inner;
-        if (q.text) {
-          inner = '<div class="field" style="margin:0"><input id="' + name + '" name="' + name + '" placeholder="' + esc(q.placeholder || "") + '" /></div>';
+        if (q.text || q.date) {
+          inner = '<div class="field" style="margin:0"><input id="' + name + '" name="' + name + '" type="' + (q.date ? "date" : "text") + '" placeholder="' + esc(q.placeholder || "") + '" /></div>';
         } else {
           inner = '<div class="chips">' + q.opts.map(o =>
             '<label class="chip"><input type="' + (q.multi ? "checkbox" : "radio") + '" name="' + name + '" value="' + esc(o) + '" />' + (q.multi ? '<span class="box"></span>' : "") + esc(o) + "</label>").join("") + "</div>";
         }
-        return '<div class="q" data-q="' + name + '"' + (q.optional ? "" : ' data-req="1"') + (q.text ? ' data-text="1"' : "") + ">" +
+        return '<div class="q" data-q="' + name + '"' + (q.optional ? "" : ' data-req="1"') + (q.text || q.date ? ' data-text="1"' : "") + ">" +
           '<div class="q-label">' + esc(q.label) + (q.optional ? ' <span class="opt">(optional)</span>' : "") + (q.multi ? ' <span class="opt">— pick all that apply</span>' : "") + "</div>" +
           inner + '<div class="err-msg">Please answer this one.</div></div>';
       }).join("") + "</section>";
   }).join("");
+  $$('#typeSteps input[type="date"]').forEach(i => i.min = todayStr);
 
   /* ================================================================
      COVERAGE DETAIL PAGE
@@ -1134,12 +1217,10 @@
   function closeMenus() { dd.classList.remove("open"); ddBtn.setAttribute("aria-expanded", "false"); $("#mobileNav").classList.remove("open"); document.body.style.overflow = ""; }
 
   /* Hero quick-start */
-  $("#quickForm").addEventListener("submit", (e) => {
-    e.preventDefault();
+  $("#quickForm").addEventListener("submit", (e) => e.preventDefault());
+  $("#quickGo").addEventListener("click", () => {
     const picked = $$("#quickOpts input:checked").map(i => i.value);
-    if (!picked.length) { $("#quickErr").classList.add("show"); return; }
-    $("#quickErr").classList.remove("show");
-    pendingPre = picked; fromQuick = true;
+    pendingPre = picked; fromQuick = picked.length > 0;
     if (location.hash === "#quote") route(); else location.hash = "quote";
   });
   $("#quickOpts").addEventListener("change", () => $("#quickErr").classList.remove("show"));
@@ -1164,7 +1245,7 @@
       const sb = $("#sendBtn"); sb.disabled = false; sb.textContent = "Send my quote request →";
       $("#quoteDone").hidden = true; form.hidden = false;
     }
-    if (pendingPre) {
+    if (pendingPre && pendingPre.length) {
       // Only apply a preselection if the visitor hasn't already moved past step 1
       if (cur === 0) {
         $$('input[name="cov"]', form).forEach(i => { i.checked = pendingPre.includes(i.value); });
@@ -1270,10 +1351,12 @@
       const c = COVERAGE[k];
       sections.push({
         key: k, title: c.title,
-        rows: c.questions.map(q => {
-          const v = answerOf(k + "_" + q.id, q.multi);
-          return [q.label.replace(/\?$/, ""), Array.isArray(v) ? (v.join(", ") || "—") : (v || "—")];
-        }),
+        rows: c.questions.filter(q => !q.h).map(q => {
+          let v = answerOf(k + "_" + q.id, q.multi);
+          if (Array.isArray(v)) v = v.join(", ");
+          if (q.date && v) { const [y, m, d] = v.split("-"); v = m + "/" + d + "/" + y; }
+          return v || q.optional ? [q.short || q.label, v] : [q.short || q.label, "—"];
+        }).filter(r => r[1]),
       });
     });
     sections.push({ key: "about", title: "Location & preferences", rows: [
@@ -1306,8 +1389,9 @@
   });
 
   /* ---------- Submit ---------- */
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
+  form.addEventListener("submit", (e) => e.preventDefault());
+  $("#sendBtn").addEventListener("click", submitQuote);
+  async function submitQuote() {
     for (let i = 0; i < seq.length - 1; i++) { if (!validateStep(seq[i])) { cur = i; showStep(); validateStep(seq[i]); return; } }
     if ($("#website_url").value) return; // bot trap
 
@@ -1330,7 +1414,7 @@
     } else {
       showDone(subject, sections, false);
     }
-  });
+  }
 
   function alertInline(before, msg) {
     let el = $("#sendErr");
@@ -1368,8 +1452,8 @@
   /* ================================================================
      CONTACT FORM
      ================================================================ */
-  $("#contactForm").addEventListener("submit", async (e) => {
-    e.preventDefault();
+  $("#contactForm").addEventListener("submit", (e) => e.preventDefault());
+  $("#cfSend").addEventListener("click", async () => {
     const n = $("#cf-name").value.trim(), em = $("#cf-email").value.trim(), m = $("#cf-msg").value.trim();
     $("#cf-name-f").classList.toggle("bad", !n);
     $("#cf-email-f").classList.toggle("bad", !emailOk(em));
