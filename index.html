@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Conway Guardian Insurance Agency — Auto, Home, Renters, Landlord & Business Insurance</title>
-<meta name="description" content="Conway Guardian Insurance Agency is an independent agency serving all 50 states. We compare carriers to find you the right auto, home, renters, landlord and business coverage." />
+<title>Conway Guardian Insurance Group — Auto, Home, Renters, Landlord & Business Insurance</title>
+<meta name="description" content="Conway Guardian Insurance Group is an independent insurance agency proudly serving South Carolina. We compare coverage options from multiple carriers for auto, home, renters, landlord and business insurance." />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -69,6 +69,7 @@
     padding: 8px; width: 300px; display: none;
   }
   .dd.open .dd-menu { display: block; }
+  .dd-title { font-size: 11.5px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); padding: 8px 10px 4px; }
   .dd-menu a { display: flex; gap: 12px; align-items: center; padding: 10px; border-radius: 10px; text-decoration: none; }
   .dd-menu a:hover { background: var(--blue-soft); }
   .dd-menu .ic { width: 38px; height: 38px; border-radius: 10px; background: var(--blue-soft); color: var(--navy-3); display: grid; place-items: center; flex: none; }
@@ -185,7 +186,16 @@
   .card .ic .ico { width: 28px; height: 28px; }
   .card h3 { font-size: 20px; }
   .card p { color: var(--muted); font-size: 14.5px; flex: 1; }
-  .card .more { font-weight: 700; font-size: 14px; color: var(--navy-3); }
+  .card .more { font-weight: 700; font-size: 14px; color: var(--navy-3); text-decoration: none; }
+  .card .more:hover { text-decoration: underline; }
+  div.card:hover { transform: none; }
+  .card-actions { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; margin-top: 6px; }
+  .card-actions .btn { padding: 10px 16px; font-size: 14px; width: 100%; }
+  .cards { text-align: left; }
+  .btn-call { background: #fff; color: var(--navy); box-shadow: 0 2px 0 #cbd5e1; padding-top: 10px; padding-bottom: 10px; }
+  .btn-call:hover { background: #f1f5f9; }
+  .btn-call > span { display: flex; flex-direction: column; align-items: flex-start; line-height: 1.15; }
+  .btn-call small { font-size: 13px; font-weight: 600; color: var(--navy-3); }
 
   /* ---------- Why / steps ---------- */
   .three { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; margin-top: 44px; }
@@ -337,6 +347,18 @@
   .chip:has(input:checked) .box::after { width: 4px; height: 9px; border-width: 0 2px 2px 0; }
   .q { margin-bottom: 22px; }
   .q-group { font-size: 12px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; color: var(--gold); display: flex; align-items: center; gap: 12px; margin: 30px 0 16px; }
+  .qgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 14px; }
+  .qgrid.three { grid-template-columns: 1fr 1.2fr 1.2fr; }
+  .qgrid .q.full { grid-column: 1 / -1; }
+  @media (max-width: 560px) { .qgrid, .qgrid.three { grid-template-columns: 1fr; } }
+  .fixed-field { display: flex; justify-content: space-between; align-items: center; gap: 10px; padding: 13px 14px; border: 2px solid var(--line); border-radius: 11px; background: #f1f5f9; font-weight: 700; color: var(--navy); }
+  .fixed-field span { font-size: 12px; font-weight: 600; color: var(--muted); }
+  .vblock { border: 2px solid var(--line); border-radius: 16px; padding: 18px 18px 2px; margin: 0 0 16px; background: #fbfcfe; }
+  .vhead { display: flex; align-items: center; gap: 8px; font-weight: 800; color: var(--navy); margin-bottom: 14px; }
+  .vhead .ico { width: 20px; height: 20px; color: var(--navy-3); }
+  .lender { display: none; border-top: 1px dashed #cbd5e1; padding-top: 14px; margin-bottom: 8px; }
+  .lender.show { display: block; animation: vfade .2s; }
+  .lender-title { font-weight: 800; font-size: 14px; color: var(--navy-3); margin-bottom: 12px; }
   .q-group::after { content: ""; flex: 1; height: 1px; background: var(--line); }
   .wstep .tag + h2 + .sub + .step-err + .q-group { margin-top: 6px; }
   .q.bad .chips .chip { border-color: #fca5a5; }
@@ -485,16 +507,16 @@
 
 <div class="topline">
   <div class="wrap">
-    <span class="hide-sm">Independent insurance agency · Serving clients in <b>all 50 states</b></span>
-    <span>Questions? Call <b class="js-phone">(555) 555-0142</b></span>
+    <span class="hide-sm">Independent insurance agency · <b>Proudly Serving South Carolina</b></span>
+    <span>Questions? Call <a class="js-tel" href="#" style="color:#fff;font-weight:700;text-decoration:none"><span class="js-phone">803-768-0594</span></a></span>
   </div>
 </div>
 
 <header class="site">
   <div class="wrap">
-    <a href="#" class="logo" aria-label="Conway Guardian Insurance Agency — home">
+    <a href="#" class="logo" aria-label="Conway Guardian Insurance Group — home">
       <span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span>
-      <span class="name">Conway Guardian<small>Insurance Agency</small></span>
+      <span class="name">Conway Guardian<small>Insurance Group</small></span>
     </a>
     <nav class="main" aria-label="Main">
       <div class="dd" id="covDD">
@@ -505,7 +527,7 @@
       <a href="#contact" data-nav="contact">Contact</a>
     </nav>
     <div class="hdr-cta">
-      <a class="phone-link js-tel" href="#"><svg class="ico"><use href="#i-phone"/></svg><span class="js-phone">(555) 555-0142</span></a>
+      <a class="phone-link js-tel" href="#"><svg class="ico"><use href="#i-phone"/></svg><span class="js-phone">803-768-0594</span></a>
       <a href="#quote" class="btn btn-gold">Get a Quote</a>
     </div>
     <button class="burger" id="burger" aria-label="Open menu"><svg class="ico"><use href="#i-menu"/></svg></button>
@@ -514,7 +536,7 @@
 
 <div class="mobile-nav" id="mobileNav" role="dialog" aria-label="Menu">
   <div class="head">
-    <a href="#" class="logo"><span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span><span class="name">Conway Guardian<small>Insurance Agency</small></span></a>
+    <a href="#" class="logo"><span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span><span class="name">Conway Guardian<small>Insurance Group</small></span></a>
     <button class="burger" style="display:grid" id="closeNav" aria-label="Close menu"><svg class="ico"><use href="#i-x"/></svg></button>
   </div>
   <div class="links" id="mobileLinks"></div>
@@ -528,21 +550,21 @@
       <div class="wrap grid">
         <div>
           <div class="eyebrow">Independent insurance agency</div>
-          <h1>Coverage that's built around <em>you</em> — not one company's price list.</h1>
-          <p class="lead">We compare multiple carriers to find the right auto, home, renters, landlord and business coverage at a price that makes sense. One agent. Every policy. All 50 states.</p>
+          <h1>Coverage That’s Built Around <em>You</em> — Not One Company’s Price List.</h1>
+          <p class="lead">At Conway Guardian Insurance Group, we believe insurance should fit your needs, not the other way around. As an independent insurance agency serving South Carolina, we compare coverage options from multiple carriers to help individuals, families, property owners, and businesses find the protection they need at a competitive price.</p>
           <div class="ctas">
             <a href="#quote" class="btn btn-gold btn-lg">Get my free quote →</a>
-            <a href="#" class="btn btn-ghost-w btn-lg js-tel"><svg class="ico" style="width:18px;height:18px"><use href="#i-phone"/></svg><span class="js-phone">(555) 555-0142</span></a>
+            <a href="#" class="btn btn-call btn-lg js-tel"><svg class="ico" style="width:20px;height:20px"><use href="#i-phone"/></svg><span>Call Now<small class="js-phone">803-768-0594</small></span></a>
           </div>
           <div class="proof">
             <span><svg class="ico"><use href="#i-scale"/></svg>We shop multiple carriers</span>
-            <span><svg class="ico"><use href="#i-flag"/></svg>Licensed nationwide</span>
-            <span><svg class="ico"><use href="#i-check"/></svg>Free, no-obligation quotes</span>
+            <span><svg class="ico"><use href="#i-flag"/></svg>Proudly Serving South Carolina</span>
+            <span><svg class="ico"><use href="#i-check"/></svg>Free quote requests</span>
           </div>
         </div>
         <form class="quick" id="quickForm" novalidate>
           <h3>What do you need covered?</h3>
-          <p>Pick one or more — bundling can save you money.</p>
+          <p>Pick one or more and we’ll take you to the right quote form.</p>
           <div class="opts" id="quickOpts"></div>
           <div class="err" id="quickErr">Pick at least one to get started.</div>
           <button type="button" class="btn btn-navy btn-lg" id="quickGo">Start my quote →</button>
@@ -553,8 +575,8 @@
     <section class="band">
       <div class="wrap center">
         <div class="eyebrow">Our coverage</div>
-        <h2 class="sec">Protection for everything that matters</h2>
-        <p class="lead">From your daily driver to your rental properties to the business you've built.</p>
+        <h2 class="sec">Protection for Everything That Matters</h2>
+        <p class="lead">Whether you’re protecting your vehicle, your home, your rental property, or your business, Conway Guardian Insurance Group is here to help you explore insurance options that fit your needs.</p>
         <div class="cards" id="homeCards"></div>
       </div>
     </section>
@@ -563,17 +585,17 @@
       <div class="wrap">
         <div class="center">
           <div class="eyebrow">Why independent matters</div>
-          <h2 class="sec">We work for you, not an insurance company</h2>
-          <p class="lead">A captive agent can only sell you one company's policies. As an independent agency, we compare options across carriers and recommend what actually fits.</p>
+          <h2 class="sec">We Work for You, Not Just One Insurance Company.</h2>
+          <p class="lead">As an independent insurance agency, Conway Guardian Insurance Group offers access to multiple insurance carriers rather than being limited to one company’s products. We take the time to understand your needs, compare available coverage options, and help you make informed decisions about protecting what matters most.</p>
         </div>
         <div class="three">
-          <div class="why"><div class="ic"><svg class="ico"><use href="#i-scale"/></svg></div><h3>We shop, you save time</h3><p>One conversation, multiple quotes. We do the comparing so you don't have to fill out form after form.</p></div>
-          <div class="why"><div class="ic"><svg class="ico"><use href="#i-layers"/></svg></div><h3>Everything in one place</h3><p>Car, home, rentals and business with one agent who knows your whole picture — and can spot gaps or overlaps.</p></div>
-          <div class="why"><div class="ic"><svg class="ico"><use href="#i-user"/></svg></div><h3>A real person on your side</h3><p>Questions, policy changes, or a claim — you call us, not a call center. We help you through it.</p></div>
+          <div class="why"><div class="ic"><svg class="ico"><use href="#i-scale"/></svg></div><h3>We Shop, You Save Time</h3><p>Instead of contacting multiple insurance companies yourself, let us do the comparing. We explore available options to help you find coverage that fits your needs.</p></div>
+          <div class="why"><div class="ic"><svg class="ico"><use href="#i-layers"/></svg></div><h3>Everything in One Place</h3><p>From auto and homeowners insurance to rental properties and business coverage, we help you manage your insurance needs through one agency.</p></div>
+          <div class="why"><div class="ic"><svg class="ico"><use href="#i-user"/></svg></div><h3>A Real Person on Your Side</h3><p>Insurance shouldn’t feel complicated. We’re here to answer your questions, assist with policy changes, and provide guidance when you need it.</p></div>
         </div>
         <div class="compare">
-          <div class="them"><h4>Buying direct / captive agent</h4><ul><li>One company's options and prices</li><li>Re-shop yourself every renewal</li><li>Different contacts for each policy</li><li>On your own when filing a claim</li></ul></div>
-          <div class="us"><h4>Conway Guardian</h4><ul><li>Options from multiple carriers</li><li>We re-check your rates at renewal</li><li>One agent for every policy</li><li>We help you through the claim</li></ul></div>
+          <div class="them"><h4>Single-Carrier Agency</h4><ul><li>Insurance options from one carrier</li><li>Limited to that company’s available products</li><li>Coverage and pricing based on one carrier’s offerings</li></ul></div>
+          <div class="us"><h4>Conway Guardian Insurance Group</h4><ul><li>Access to multiple insurance carriers</li><li>Personalized coverage recommendations</li><li>Assistance comparing available coverage and pricing</li><li>Ongoing support with policy questions and service needs</li></ul></div>
         </div>
       </div>
     </section>
@@ -582,12 +604,12 @@
       <div class="wrap">
         <div class="center">
           <div class="eyebrow">How it works</div>
-          <h2 class="sec">Quoted in three easy steps</h2>
+          <h2 class="sec">Three simple steps</h2>
         </div>
         <div class="steps">
           <div class="stepc"><h3>Tell us what you need</h3><p>Answer a few quick questions online — about 2 minutes. No Social Security number required.</p></div>
-          <div class="stepc"><h3>We compare carriers</h3><p>We shop your coverage across our carrier partners and narrow it down to the best fits.</p></div>
-          <div class="stepc"><h3>Pick your policy</h3><p>We walk you through your options in plain English. You choose — no pressure.</p></div>
+          <div class="stepc"><h3>We compare carriers</h3><p>We review available coverage options from multiple carriers based on your needs.</p></div>
+          <div class="stepc"><h3>Choose with confidence</h3><p>We walk you through your options in plain English so you can make an informed decision.</p></div>
         </div>
       </div>
     </section>
@@ -596,8 +618,8 @@
       <div class="wrap">
         <div class="bundle">
           <div>
-            <h2>Bundle your policies and save</h2>
-            <p>Many carriers offer discounts when you combine auto with home or renters — plus it's simpler with one agent managing everything.</p>
+            <h2>Combine your policies in one place</h2>
+            <p>Some carriers offer multi-policy discounts when you combine auto with home or renters coverage. Either way, it’s simpler with one agency helping you manage everything.</p>
           </div>
           <a href="#quote" class="btn btn-navy btn-lg" data-pre="auto,homeowners">Quote a bundle →</a>
         </div>
@@ -622,21 +644,21 @@
         <div class="center"><div class="eyebrow">FAQ</div><h2 class="sec">Common questions</h2></div>
         <div class="faq">
           <details><summary>What is an independent insurance agency?</summary><p>We're not tied to a single insurance company. We work with multiple carriers, so we can compare coverage and pricing and recommend the option that fits you best.</p></details>
-          <details><summary>Does it cost anything to get a quote?</summary><p>No. Quotes are free and there's no obligation to buy.</p></details>
-          <details><summary>Do you really work in every state?</summary><p>Yes — we serve clients nationwide, so you can keep the same agent even if you move or own property in more than one state.</p></details>
-          <details><summary>What information do I need to get a quote?</summary><p>Just the basics to start: what you want covered, your ZIP code and how to reach you. We'll collect anything else we need directly — we never ask for your Social Security number on this website.</p></details>
-          <details><summary>Can you help if I already have insurance?</summary><p>Absolutely. We'll review your current policies, look for gaps in coverage, and see if we can get you a better rate at renewal.</p></details>
+          <details><summary>Does it cost anything to request a quote?</summary><p>No. Requesting a quote is free and there’s no obligation to buy.</p></details>
+          <details><summary>What areas do you serve?</summary><p>We’re proudly serving South Carolina — individuals, families, property owners and businesses across the state.</p></details>
+          <details><summary>What information do I need to get a quote?</summary><p>Just the basics to start: what you want covered, your ZIP code and how to reach you. We’ll follow up for anything else we need — we never ask for your Social Security number on this website.</p></details>
+          <details><summary>Can you help if I already have insurance?</summary><p>Absolutely. We can review your current policies, point out possible gaps in coverage, and compare available options from multiple carriers.</p></details>
         </div>
       </div>
     </section>
 
     <section class="cta-band">
       <div class="wrap">
-        <h2>Ready to see what you could save?</h2>
-        <p>Get a free, no-obligation quote in about 2 minutes.</p>
+        <h2>Ready to explore your coverage options?</h2>
+        <p>Request a free quote in a few minutes, or call to talk with a real person.</p>
         <div class="row">
           <a href="#quote" class="btn btn-gold btn-lg">Get my free quote →</a>
-          <a href="#" class="btn btn-ghost-w btn-lg js-tel">Call <span class="js-phone">(555) 555-0142</span></a>
+          <a href="#" class="btn btn-ghost-w btn-lg js-tel">📞 Call Now <span class="js-phone">803-768-0594</span></a>
         </div>
       </div>
     </section>
@@ -650,7 +672,7 @@
     <section class="page-hero">
       <div class="wrap">
         <div class="crumbs"><a href="#">Home</a> / About</div>
-        <h1>About Conway Guardian</h1>
+        <h1>About Conway Guardian Insurance Group</h1>
         <p>An independent agency built on one simple idea: you deserve someone in your corner when it comes to protecting what you've worked for.</p>
       </div>
     </section>
@@ -661,10 +683,10 @@
           <div class="eyebrow">Meet your agent</div>
           <h2 class="sec">[Agent name], Owner & Licensed Agent</h2>
           <p>[Short story: how long she's been in insurance, why she started Conway Guardian, and what she loves about helping clients.]</p>
-          <p>As an independent agency, Conway Guardian works with multiple insurance carriers instead of just one. That means we can compare coverage and pricing side by side and recommend what's genuinely right for you — whether that's your first car insurance policy, a growing rental portfolio, or coverage for your business.</p>
-          <p>We serve clients in all 50 states, so you can keep the same trusted agent no matter where life takes you.</p>
+          <p>As an independent agency, Conway Guardian Insurance Group works with multiple insurance carriers instead of just one. That means we can compare available coverage and pricing and help you choose what fits your needs — whether that's your first car insurance policy, a growing rental portfolio, or coverage for your business.</p>
+          <p>We’re proudly serving South Carolina, offering personalized service to individuals, families, property owners and businesses across the state.</p>
           <div class="stats">
-            <div><b>50</b><span>States served</span></div>
+            <div><b>SC</b><span>Proudly serving South Carolina</span></div>
             <div><b>5</b><span>Lines of coverage</span></div>
             <div><b>[#]</b><span>Years experience</span></div>
           </div>
@@ -686,10 +708,10 @@
     <section class="band">
       <div class="wrap contact-grid">
         <div class="info-list">
-          <div class="info"><div class="ic"><svg class="ico"><use href="#i-phone"/></svg></div><div><b>Phone</b><span class="js-phone">(555) 555-0142</span></div></div>
+          <div class="info"><div class="ic"><svg class="ico"><use href="#i-phone"/></svg></div><div><b>Phone</b><span class="js-phone">803-768-0594</span><div style="margin-top:10px"><a href="#" class="btn btn-navy js-tel">📞 Call Now</a></div></div></div>
           <div class="info"><div class="ic"><svg class="ico"><use href="#i-mail"/></svg></div><div><b>Email</b><span class="js-email">info@conwayguardian.com</span></div></div>
           <div class="info"><div class="ic"><svg class="ico"><use href="#i-clock"/></svg></div><div><b>Hours</b><span class="js-hours">Mon–Fri 9am–6pm ET</span></div></div>
-          <div class="info"><div class="ic"><svg class="ico"><use href="#i-map"/></svg></div><div><b>Service area</b><span>Licensed and serving clients in all 50 states</span></div></div>
+          <div class="info"><div class="ic"><svg class="ico"><use href="#i-map"/></svg></div><div><b>Service area</b><span>Proudly Serving South Carolina</span></div></div>
           <div class="info" style="background:var(--navy);color:#fff;border-color:var(--navy)"><div class="ic" style="background:rgba(217,164,65,.18);color:var(--gold)"><svg class="ico"><use href="#i-shield"/></svg></div><div><b style="color:#fff">Looking for a quote?</b><span style="color:#cbd5e1">Our quote form is the fastest way.</span><div style="margin-top:10px"><a href="#quote" class="btn btn-gold">Start a quote →</a></div></div></div>
         </div>
         <div class="panel" id="contactPanel">
@@ -735,11 +757,16 @@
 
               <section class="wstep" data-key="about" data-name="Your details">
                 <h2>A little about you</h2>
-                <p class="sub">So we can check rates and availability in your area.</p>
+                <p class="sub">Your home or mailing address helps us review coverage options available in your area.</p>
                 <div class="step-err">Please fix the highlighted fields.</div>
+                <div class="field" id="street-f"><label for="street">Street address <span class="opt">(optional)</span></label><input id="street" autocomplete="street-address" placeholder="123 Main St" /></div>
                 <div class="g2">
-                  <div class="field" id="zip-f"><label for="zip">ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 30301" /><div class="err-msg">Enter a 5-digit ZIP.</div></div>
-                  <div class="field" id="state-f"><label for="state">State</label><select id="state" autocomplete="address-level1"><option value="">Select…</option></select><div class="err-msg">Choose your state.</div></div>
+                  <div class="field" id="city-f"><label for="city">City <span class="opt">(optional)</span></label><input id="city" autocomplete="address-level2" placeholder="e.g. Columbia" /></div>
+                  <div class="field"><label>State</label><div class="fixed-field">South Carolina (SC)<span>Serving South Carolina</span></div></div>
+                </div>
+                <div class="g2">
+                  <div class="field" id="zip-f"><label for="zip">ZIP code</label><input id="zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 29201" /><div class="err-msg">Enter a 5-digit ZIP.</div></div>
+                  <div></div>
                 </div>
                 <div class="q" data-q="contactPref" data-req="1">
                   <div class="q-label">How should we reach you?</div>
@@ -774,7 +801,7 @@
                   <div class="field" id="email-f"><label for="email">Email</label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com" /><div class="err-msg">Enter a valid email.</div></div>
                 </div>
                 <div class="field"><label for="notes">Anything else we should know? <span class="opt">(optional)</span></label><textarea id="notes" rows="3" placeholder="e.g. current carrier, renewal date, questions you have…"></textarea></div>
-                <label class="consent" id="consent-f"><input type="checkbox" id="consent" /><span>By checking this box, I agree that <b>Conway Guardian Insurance Agency</b> may contact me about my quote by phone, text message or email at the number and address I provided, including by automated means. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP to opt out.</span></label>
+                <label class="consent" id="consent-f"><input type="checkbox" id="consent" /><span>By checking this box, I agree that <b>Conway Guardian Insurance Group</b> may contact me about my quote by phone, text message or email at the number and address I provided, including by automated means. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP to opt out.</span></label>
               </section>
 
               <section class="wstep" data-key="review" data-name="Review">
@@ -803,7 +830,7 @@
     <section class="band"><div class="wrap" style="max-width:820px">
       <div class="template-note"><b>Template placeholder.</b> Replace this with a privacy policy reviewed for the agency before launch.</div>
       <div class="policy">
-        <h2>Information we collect</h2><p>When you request a quote or contact us, we collect the information you provide, such as your name, phone number, email address, ZIP code, state and details about the coverage you're interested in.</p>
+        <h2>Information we collect</h2><p>When you request a quote or contact us, we collect the information you provide, such as your name, phone number, email address, address, ZIP code and details about the coverage you're interested in.</p>
         <h2>How we use it</h2><ul><li>To prepare and send insurance quotes you request</li><li>To contact you about your request by phone, text or email, as you've agreed</li><li>To share with insurance carriers as needed to obtain quotes for you</li></ul>
         <h2>What we don't do</h2><p>We do not sell your personal information. We do not ask for Social Security numbers or financial account numbers through this website.</p>
         <h2>Your choices</h2><p>You can opt out of text messages at any time by replying STOP, and ask us to update or delete your information by contacting us.</p>
@@ -817,22 +844,22 @@
   <div class="wrap">
     <div class="cols">
       <div>
-        <a href="#" class="logo"><span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span><span class="name">Conway Guardian<small>Insurance Agency</small></span></a>
-        <p style="max-width:300px">Independent insurance agency serving individuals, families, landlords and businesses in all 50 states.</p>
+        <a href="#" class="logo"><span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span><span class="name">Conway Guardian<small>Insurance Group</small></span></a>
+        <p style="max-width:300px">Independent insurance agency proudly serving individuals, families, property owners and businesses in South Carolina.</p>
       </div>
       <div><h5>Coverage</h5><ul id="footCov"></ul></div>
       <div><h5>Agency</h5><ul><li><a href="#about">About us</a></li><li><a href="#contact">Contact</a></li><li><a href="#quote">Get a quote</a></li><li><a href="#privacy">Privacy policy</a></li></ul></div>
-      <div><h5>Reach us</h5><ul><li class="js-phone">(555) 555-0142</li><li class="js-email">info@conwayguardian.com</li><li class="js-hours">Mon–Fri 9am–6pm ET</li></ul></div>
+      <div><h5>Reach us</h5><ul><li><a href="#" class="js-tel"><span class="js-phone">803-768-0594</span></a></li><li class="js-email">info@conwayguardian.com</li><li class="js-hours">Mon–Fri 9am–6pm ET</li></ul></div>
     </div>
     <div class="legal">
-      <div>© <span id="yr"></span> Conway Guardian Insurance Agency. All rights reserved. · <span class="js-license">License #[000000]</span></div>
-      <div>Coverage is subject to the terms, conditions and exclusions of the policy issued. Not all coverages, discounts or carriers are available in every state. Submitting a quote request does not bind coverage.</div>
+      <div>© <span id="yr"></span> Conway Guardian Insurance Group. All rights reserved. · <span class="js-license">License #[000000]</span></div>
+      <div>Coverage is subject to the terms, conditions and exclusions of the policy issued. Coverage, discounts and carrier availability vary. Quotes are not guaranteed, and submitting a quote request does not bind or approve coverage.</div>
     </div>
   </div>
 </footer>
 
 <div class="mobile-cta">
-  <a href="#" class="btn btn-line js-tel" style="background:#fff">📞 Call</a>
+  <a href="#" class="btn btn-line js-tel" style="background:#fff">📞 Call Now</a>
   <a href="#quote" class="btn btn-gold">Get a Quote</a>
 </div>
 
@@ -842,8 +869,8 @@
      ⚙️ AGENCY SETTINGS — edit these before launch
      ================================================================ */
   const AGENCY = {
-    name: "Conway Guardian Insurance Agency",
-    phone: "(555) 555-0142",                 // placeholder
+    name: "Conway Guardian Insurance Group",
+    phone: "803-768-0594",                 // placeholder
     email: "info@conwayguardian.com",        // placeholder — where leads go is set in Formspree
     hours: "Mon–Fri 9am–6pm ET",             // placeholder
     license: "License #[000000]",            // placeholder
@@ -853,13 +880,19 @@
   const QUOTE_FORM_ID = "";
   const CONTACT_FORM_ID = "";
 
+  // EASIEST OPTION — no account needed: put the agency's email here (e.g. "leads@example.com").
+  // Submissions are delivered through FormSubmit.co. The very first submission sends an
+  // "Activate form" email to this address; click it once and every quote after that arrives.
+  const LEAD_EMAIL = "";
+  const endpointFor = (formId) => formId ? "https://formspree.io/f/" + formId : (LEAD_EMAIL ? "https://formsubmit.co/ajax/" + LEAD_EMAIL : "");
+
   /* ================================================================
      COVERAGE DATA
      ================================================================ */
   const COVERAGE = {
     auto: {
       title: "Auto Insurance", short: "Auto", blurb: "Cars, trucks, SUVs and the people who drive them.",
-      hero: "From state-minimum liability to full coverage, we compare carriers to protect your vehicles, your passengers and your wallet.",
+      hero: "Explore auto insurance options designed to protect you, your vehicle, and your financial well-being while on the road.",
       covers: [
         ["Liability", "Injuries and damage you cause to others"],
         ["Collision", "Repairs to your car after an accident"],
@@ -871,13 +904,13 @@
       who: ["Individuals & families", "New and teen drivers", "Multi-car households", "Drivers needing an SR-22", "Classic & collector cars", "Rideshare drivers"],
       faq: [
         ["What's the difference between liability and full coverage?", "Liability pays for damage you cause to other people and their property. “Full coverage” usually means liability plus collision and comprehensive, which also cover damage to your own vehicle."],
-        ["Can you help if I need an SR-22?", "Yes. Let us know in your quote request and we'll look for carriers that can file it in your state."],
-        ["Will adding a teen driver raise my rate a lot?", "It often does, but carriers handle it differently — and good-student and driver-training discounts can help. Comparing carriers matters most here."],
+        ["Can you help if I need an SR-22?", "Yes. Let us know in your quote request and we’ll look for carriers that can file it in South Carolina."],
+        ["How does adding a teen driver affect my policy?", "Carriers handle young drivers differently, and some offer good-student or driver-training discounts. Comparing carriers can help you see your options."],
       ],
     },
     homeowners: {
       title: "Homeowners Insurance", short: "Homeowners", blurb: "Your house, your belongings and your liability.",
-      hero: "Protect the biggest investment you own. We'll find coverage that would actually rebuild your home — not just the cheapest number.",
+      hero: "Protect your home and personal belongings with homeowners insurance coverage tailored to your property and needs.",
       covers: [
         ["Dwelling", "The structure of your home"],
         ["Other structures", "Fences, sheds and detached garages"],
@@ -890,12 +923,12 @@
       faq: [
         ["Is flood damage covered by homeowners insurance?", "Usually not. Flood typically needs a separate policy. We can quote it alongside your home coverage."],
         ["How much dwelling coverage do I need?", "Enough to rebuild your home at today's construction costs — which can be very different from what you paid or its market value."],
-        ["I'm closing on a house soon. Can you move fast?", "Yes — tell us your closing date in the notes and we'll prioritize getting your lender what they need."],
+        ["I'm closing on a house soon. Can you help?", "Yes — include your closing date in your quote request so we can plan around it and help with what your lender needs."],
       ],
     },
     renters: {
       title: "Renters Insurance", short: "Renters", blurb: "Affordable protection for your stuff and liability.",
-      hero: "Your landlord's policy covers the building — not your belongings. Renters insurance protects your things and covers you if someone gets hurt.",
+      hero: "Protect your personal belongings and yourself against covered liability risks with affordable renters insurance options.",
       covers: [
         ["Personal belongings", "At home, in your car, even while traveling"],
         ["Theft & vandalism", "Stolen or damaged property"],
@@ -905,13 +938,13 @@
       who: ["Apartment renters", "Renting a house", "College students", "Landlord requires proof", "Roommates", "Pet owners"],
       faq: [
         ["Doesn't my landlord's insurance cover my things?", "No. A landlord's policy covers the building and their liability — not your personal belongings."],
-        ["Is renters insurance expensive?", "It's typically one of the most affordable kinds of insurance, and it's often cheaper when bundled with auto."],
+        ["Is renters insurance expensive?", "Renters insurance is often one of the more affordable types of coverage, and some carriers offer multi-policy discounts with auto."],
         ["My landlord needs proof of insurance. Can you send it?", "Yes — once your policy is active we can send proof of coverage directly to your landlord or property manager."],
       ],
     },
     landlord: {
       title: "Landlord & Rental Property Insurance", short: "Landlord / Rental", blurb: "Coverage built for the properties you rent out.",
-      hero: "A standard homeowners policy usually won't cover a property you rent out. We'll protect your rentals, your rental income and your liability.",
+      hero: "Protect your investment with insurance coverage designed for rental properties, landlords, and property owners.",
       covers: [
         ["Dwelling", "The rental building itself"],
         ["Loss of rental income", "Lost rent while repairs are made after a covered loss"],
@@ -924,12 +957,12 @@
       faq: [
         ["Can I use my homeowners policy for a rental?", "Usually not. Most homeowners policies exclude or limit coverage once you rent the home out — you'll typically need a landlord (dwelling fire) policy."],
         ["Do you insure short-term rentals like Airbnb?", "Yes. Short-term rentals have different risks, so let us know and we'll find carriers that cover them."],
-        ["Can you insure properties in different states?", "Yes — we serve all 50 states, so we can help you manage rentals across state lines with one agent."],
+        ["Can you help with more than one rental property?", "Yes. Whether you own one rental or a growing portfolio in South Carolina, we can help you review coverage for each property through one agency."],
       ],
     },
     business: {
       title: "Commercial & Business Insurance", short: "Business", blurb: "Coverage for small businesses, contractors and more.",
-      hero: "You've built something worth protecting. We'll match your business with the right mix of liability, property, workers' comp and auto coverage.",
+      hero: "Protect the business you’ve worked hard to build with commercial insurance solutions, including general liability coverage for small businesses and contractors.",
       covers: [
         ["General liability", "Customer injuries and property damage claims"],
         ["Business owner's policy (BOP)", "Liability + property bundled, often at a lower cost"],
@@ -942,8 +975,8 @@
       ],
       who: ["Contractors & trades", "Retail shops", "Restaurants & food", "Offices & professionals", "Home-based businesses", "Startups & LLCs"],
       faq: [
-        ["What does a BOP include?", "A business owner's policy typically bundles general liability and commercial property into one policy, which is often less expensive than buying them separately."],
-        ["Do I need workers' compensation?", "Most states require it once you have employees, but the rules vary by state and industry. We'll help you understand what applies to you."],
+        ["What does a BOP include?", "A business owner's policy typically combines general liability and commercial property coverage into one policy."],
+        ["Do I need workers' compensation?", "Requirements depend on factors like your number of employees and your industry. We'll help you understand what applies to your business in South Carolina."],
         ["I need a certificate of insurance for a job. Can you help?", "Yes — once you're covered, we can issue certificates of insurance (COIs) for your clients."],
       ],
     },
@@ -956,13 +989,11 @@
   const Q = {
     auto: {
       title: "Your vehicles & drivers",
-      intro: "A few details about your vehicles and drivers so we can match you with the right carriers.",
+      intro: "A few details about your vehicles and drivers so we can compare options from multiple carriers.",
       questions: [
         { h: "Vehicles" },
-        { id: "vehicles", short: "Vehicles", label: "How many vehicles do you want to insure?", opts: ["1", "2", "3", "4+"] },
-        { id: "vehicleList", short: "Year / make / model", label: "Year, make and model of each", text: true, optional: true, placeholder: "e.g. 2019 Honda CR-V, 2015 Ford F-150" },
+        { id: "vehicles", short: "Vehicles", label: "How many vehicles do you want to insure?", opts: ["1", "2", "3", "4", "5", "6"], vehicles: true },
         { id: "use", short: "Vehicle use", label: "How are the vehicles used?", multi: true, opts: ["Commuting", "Pleasure / errands", "Business use", "Rideshare / delivery"] },
-        { id: "ownership", short: "Ownership", label: "Do you own, finance or lease?", multi: true, opts: ["Own outright", "Financed", "Leased"] },
         { h: "Drivers" },
         { id: "drivers", short: "Drivers", label: "How many drivers in the household?", opts: ["1", "2", "3", "4+"] },
         { id: "youngest", short: "Youngest driver", label: "Age of the youngest driver", opts: ["Under 21", "21–24", "25–64", "65+"] },
@@ -971,18 +1002,20 @@
         { h: "Current coverage" },
         { id: "insured", short: "Currently insured", label: "Do you have auto insurance now?", opts: ["Yes", "No", "Lapsed recently"] },
         { id: "carrier", short: "Current carrier", label: "Current insurance company", text: true, optional: true, placeholder: "e.g. Progressive" },
-        { id: "renewal", short: "Renews", label: "When does your current policy renew?", opts: ["Within 30 days", "1–3 months", "3+ months", "Not sure / N/A"] },
-        { id: "level", short: "Coverage wanted", label: "What level of coverage are you looking for?", opts: ["State minimum", "Standard", "Full coverage", "Not sure — advise me"] },
       ],
     },
     homeowners: {
       title: "About your home",
-      intro: "Tell us about the home so we can price coverage that would actually rebuild it.",
+      intro: "Tell us about the property so we can review coverage options that fit your home.",
       questions: [
+        { h: "Property address · South Carolina" },
+        { id: "street", short: "Street address", label: "Property street address", text: true, optional: true, placeholder: "123 Main St", half: true },
+        { id: "city", short: "City", label: "City", text: true, optional: true, placeholder: "e.g. Columbia", half: true },
+        { id: "state", short: "State", label: "State", fixed: "South Carolina (SC)", half: true },
+        { id: "zip", short: "ZIP", label: "Property ZIP code", zip: true, half: true },
         { h: "The property" },
         { id: "status", short: "Status", label: "Which describes you?", opts: ["I own the home", "I'm buying", "Refinancing"] },
         { id: "closing", short: "Closing date", label: "Closing date (if buying)", date: true, optional: true },
-        { id: "address", short: "Property address", label: "Property street address", text: true, optional: true, placeholder: "123 Main St, City" },
         { id: "type", short: "Home type", label: "Type of home", opts: ["Single-family", "Condo", "Townhouse", "Mobile / manufactured"] },
         { id: "occupancy", short: "Occupancy", label: "How is the home used?", opts: ["Primary residence", "Second / vacation home"] },
         { h: "Construction" },
@@ -990,73 +1023,85 @@
         { id: "sqft", short: "Square feet", label: "Approximate square footage", opts: ["Under 1,500", "1,500–2,500", "2,500–4,000", "4,000+", "Not sure"] },
         { id: "construction", short: "Construction", label: "Exterior construction", opts: ["Wood / frame", "Brick / masonry", "Stucco", "Siding", "Not sure"] },
         { id: "roof", short: "Roof age", label: "How old is the roof?", opts: ["Under 5 years", "5–10 years", "10–20 years", "20+ years", "Not sure"] },
-        { h: "Risk & discounts" },
+        { h: "Property details" },
         { id: "safety", short: "Safety features", label: "Safety features", multi: true, optional: true, opts: ["Monitored alarm", "Smoke / fire alarms", "Sprinklers", "Deadbolts", "Water leak sensors", "Gated community"] },
         { id: "liability", short: "On the property", label: "Anything on the property?", multi: true, optional: true, opts: ["Pool", "Trampoline", "Dog", "Wood stove", "None of these"] },
         { id: "claims", short: "Claims (5 yrs)", label: "Home insurance claims in the last 5 years?", opts: ["None", "1", "2 or more"] },
-        { h: "Coverage" },
         { id: "insured", short: "Currently insured", label: "Is it currently insured?", opts: ["Yes", "No", "Not yet (buying)"] },
-        { id: "extras", short: "Add-ons wanted", label: "Interested in any extras?", multi: true, optional: true, opts: ["Flood", "Earthquake", "Water backup", "Jewelry / valuables", "Umbrella policy"] },
       ],
     },
     renters: {
       title: "About your rental",
-      intro: "Renters coverage is quick to quote — just a few questions about your place and your stuff.",
+      intro: "Just a few questions about your place and your belongings.",
       questions: [
+        { h: "Rental address · South Carolina" },
+        { id: "street", short: "Street address", label: "Street address", text: true, optional: true, placeholder: "123 Main St, Apt 4", half: true },
+        { id: "city", short: "City", label: "City", text: true, optional: true, placeholder: "e.g. Greenville", half: true },
+        { id: "state", short: "State", label: "State", fixed: "South Carolina (SC)", half: true },
+        { id: "zip", short: "ZIP", label: "ZIP code", zip: true, half: true },
         { h: "Your place" },
         { id: "residence", short: "Residence", label: "What do you rent?", opts: ["Apartment", "House", "Condo / townhouse", "Room in a home"] },
         { id: "household", short: "Who lives there", label: "Who lives with you?", opts: ["Just me", "Spouse / partner", "Family", "Roommates"] },
-        { id: "start", short: "Coverage start", label: "When do you need coverage to start?", opts: ["ASAP", "Within 30 days", "Later — I'm moving"] },
+        { id: "start", short: "Coverage start", label: "When do you need coverage to start?", opts: ["As soon as possible", "Within 30 days", "Later — I'm moving"] },
         { id: "required", short: "Landlord requires proof", label: "Does your landlord require proof of insurance?", opts: ["Yes", "No", "Not sure"] },
         { h: "Your belongings" },
         { id: "belongings", short: "Belongings value", label: "Roughly what are your belongings worth?", opts: ["Under $15k", "$15k–$30k", "$30k–$50k", "$50k+", "Not sure"] },
         { id: "valuables", short: "High-value items", label: "Any high-value items?", multi: true, optional: true, opts: ["Jewelry", "Electronics / cameras", "Bikes / e-bikes", "Musical instruments", "Collectibles / art"] },
-        { h: "Liability" },
-        { id: "liabilityLimit", short: "Liability limit", label: "Liability coverage amount", opts: ["$100,000", "$300,000", "$500,000", "Not sure — advise me"] },
         { id: "pets", short: "Pets", label: "Any pets?", multi: true, opts: ["No pets", "Dog", "Cat", "Other"] },
       ],
     },
     landlord: {
       title: "About your rental properties",
-      intro: "Details about your rental properties help us find a landlord policy that protects your income, too.",
+      intro: "Details about your rental properties help us review coverage designed for landlords and property owners.",
       questions: [
+        { h: "Property location · South Carolina" },
+        { id: "street", short: "Property address(es)", label: "Property address(es)", text: true, placeholder: "e.g. 12 Oak St, Columbia; 45 Pine Ave, Lexington", full: true },
+        { id: "state", short: "State", label: "State", fixed: "South Carolina (SC)", half: true },
+        { id: "zip", short: "ZIP", label: "ZIP code (main property)", zip: true, half: true },
         { h: "Your portfolio" },
         { id: "count", short: "Properties", label: "How many rental properties?", opts: ["1", "2–4", "5–10", "11+"] },
         { id: "units", short: "Total units", label: "Total number of rental units", opts: ["1", "2–4", "5–10", "11–25", "26+"] },
         { id: "type", short: "Property types", label: "What type of properties?", multi: true, opts: ["Single-family", "Duplex / 2–4 units", "5+ unit building", "Condo", "Mixed-use"] },
-        { id: "locations", short: "Locations", label: "Where are the properties?", text: true, placeholder: "e.g. Atlanta GA, Tampa FL" },
         { h: "How you rent" },
         { id: "rentalType", short: "Rental type", label: "Type of rentals", opts: ["Long-term leases", "Short-term (Airbnb / VRBO)", "Mix of both"] },
         { id: "occupancy", short: "Occupancy", label: "Current occupancy", opts: ["Fully rented", "Partly vacant", "Vacant", "Under renovation"] },
         { id: "managed", short: "Managed by", label: "Who manages the properties?", opts: ["I self-manage", "Property manager"] },
         { id: "built", short: "Year built", label: "About when were they built?", opts: ["Before 1960", "1960–1989", "1990–2009", "2010 or newer", "Mixed"] },
-        { h: "Coverage" },
-        { id: "wanted", short: "Coverage wanted", label: "What coverage do you need?", multi: true, opts: ["Building / dwelling", "Loss of rental income", "Landlord liability", "Umbrella", "Flood", "Vacancy coverage", "Not sure — advise me"] },
+        { h: "Current coverage" },
         { id: "insured", short: "Currently insured", label: "Are the properties insured now?", opts: ["Yes, all", "Some of them", "No"] },
         { id: "claims", short: "Claims (5 yrs)", label: "Claims in the last 5 years?", opts: ["None", "1", "2 or more"] },
+        { id: "wanted", short: "Coverage interests", label: "Anything specific you'd like to discuss?", multi: true, optional: true, opts: ["Building / dwelling", "Loss of rental income", "Landlord liability", "Vacant property"] },
       ],
     },
     business: {
       title: "About your business",
-      intro: "Tell us about your business and we'll build the right mix of coverage — no more, no less.",
+      intro: "Tell us about your business so we can explore commercial insurance options that fit.",
       questions: [
         { h: "Your business" },
-        { id: "name", short: "Business name", label: "Business name", text: true, placeholder: "e.g. Smith Roofing LLC" },
-        { id: "industry", short: "What they do", label: "What does the business do?", text: true, placeholder: "e.g. residential roofing, coffee shop, IT consulting" },
+        { id: "name", short: "Business name", label: "Business name", text: true, placeholder: "e.g. Smith Roofing LLC", half: true },
+        { id: "industry", short: "What they do", label: "What does the business do?", text: true, placeholder: "e.g. roofing, coffee shop, consulting", half: true },
         { id: "years", short: "Years in business", label: "How long in business?", opts: ["Just starting", "Under 3 years", "3–10 years", "10+ years"] },
         { id: "location", short: "Operates from", label: "Where do you operate?", multi: true, opts: ["Home-based", "Office", "Retail storefront", "Warehouse / shop", "Job sites / on the road"] },
+        { h: "Business address · South Carolina" },
+        { id: "street", short: "Street address", label: "Business street address", text: true, optional: true, placeholder: "123 Main St", half: true },
+        { id: "city", short: "City", label: "City", text: true, optional: true, placeholder: "e.g. Charleston", half: true },
+        { id: "state", short: "State", label: "State", fixed: "South Carolina (SC)", half: true },
+        { id: "zip", short: "ZIP", label: "ZIP code", zip: true, half: true },
         { h: "Size" },
         { id: "employees", short: "Employees", label: "How many employees (besides you)?", opts: ["None", "1–5", "6–20", "21–50", "51+"] },
         { id: "revenue", short: "Annual revenue", label: "Approximate annual revenue", opts: ["Under $100k", "$100k–$500k", "$500k–$1M", "$1M–$5M", "$5M+", "Prefer not to say"] },
         { id: "vehicles", short: "Business vehicles", label: "Vehicles used for the business", opts: ["None", "1–2", "3–10", "11+"] },
         { h: "Coverage" },
-        { id: "needs", short: "Coverage wanted", label: "What coverage are you looking for?", multi: true, opts: ["General liability", "Business owner's policy (BOP)", "Workers' comp", "Commercial auto", "Commercial property", "Professional liability (E&O)", "Cyber", "Not sure — advise me"] },
         { id: "coi", short: "Needs a COI", label: "Do you need a certificate of insurance for a client or contract?", opts: ["Yes", "No", "Not yet"] },
         { id: "insured", short: "Currently insured", label: "Currently insured?", opts: ["Yes", "No", "Some coverage"] },
-        { id: "renewal", short: "Renews", label: "When does current coverage renew?", opts: ["Within 30 days", "1–3 months", "3+ months", "N/A"] },
+        { id: "needs", short: "Coverage interests", label: "Any coverage you already know you want?", multi: true, optional: true, opts: ["General liability", "Business owner's policy (BOP)", "Workers' comp", "Commercial auto", "Commercial property", "Professional liability (E&O)", "Not sure — advise me"] },
       ],
     },
   };
+  const CARD = {"auto": "Explore auto insurance options designed to protect you, your vehicle, and your financial well-being while on the road.", "homeowners": "Protect your home and personal belongings with homeowners insurance coverage tailored to your property and needs.", "renters": "Protect your personal belongings and yourself against covered liability risks with affordable renters insurance options.", "landlord": "Protect your investment with insurance coverage designed for rental properties, landlords, and property owners.", "business": "Protect the business you’ve worked hard to build with commercial insurance solutions, including general liability coverage for small businesses and contractors."};
+  Object.keys(CARD).forEach(k => COVERAGE[k].card = CARD[k]);
+  const CARD_TITLE = { auto: "Auto Insurance", homeowners: "Homeowners Insurance", renters: "Renters Insurance", landlord: "Landlord / Rental Property Insurance", business: "Business Insurance" };
+  Object.keys(CARD_TITLE).forEach(k => COVERAGE[k].cardTitle = CARD_TITLE[k]);
   Object.keys(Q).forEach(k => { COVERAGE[k].questions = Q[k].questions; COVERAGE[k].intro = Q[k].intro; COVERAGE[k].stepTitle = Q[k].title; });
   const KEYS = Object.keys(COVERAGE);
   const STATES = ["AL","AK","AZ","AR","CA","CO","CT","DE","DC","FL","GA","HI","ID","IL","IN","IA","KS","KY","LA","ME","MD","MA","MI","MN","MS","MO","MT","NE","NV","NH","NJ","NM","NY","NC","ND","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VT","VA","WA","WV","WI","WY"];
@@ -1093,17 +1138,18 @@
   $$(".js-tel").forEach(a => a.href = telHref());
   $("#yr").textContent = new Date().getFullYear();
 
-  $("#covMenu").innerHTML = KEYS.map(k =>
-    '<a href="#' + k + '"><span class="ic">' + icon(k) + '</span><span><b>' + esc(COVERAGE[k].short) + '</b><span>' + esc(COVERAGE[k].blurb) + "</span></span></a>").join("");
+  $("#covMenu").innerHTML = '<div class="dd-title">Get a quote</div>' + KEYS.map(k =>
+    '<a href="#quote" data-pre="' + k + '"><span class="ic">' + icon(k) + '</span><span><b>' + esc(COVERAGE[k].cardTitle) + '</b><span>Start your ' + esc(COVERAGE[k].short.toLowerCase()) + " quote →</span></span></a>").join("");
 
   $("#mobileLinks").innerHTML =
-    '<a href="#">Home</a><div class="grp">Coverage</div>' +
-    KEYS.map(k => '<a href="#' + k + '">' + icon(k) + esc(COVERAGE[k].title) + "</a>").join("") +
+    '<a href="#">Home</a><a href="#" class="js-tel" style="color:var(--navy)">📞 Call Now · ' + esc(AGENCY.phone) + '</a><div class="grp">Get a quote</div>' +
+    KEYS.map(k => '<a href="#quote" data-pre="' + k + '">' + icon(k) + esc(COVERAGE[k].cardTitle) + ' <span style="margin-left:auto;font-size:13px;color:var(--muted)">Quote →</span></a>').join("") +
     '<div class="grp">Agency</div><a href="#about">About</a><a href="#contact">Contact</a>' +
     '<a href="#quote" class="btn btn-gold btn-lg">Get a Quote</a>';
 
   $("#homeCards").innerHTML = KEYS.map(k =>
-    '<a class="card" href="#' + k + '"><div class="ic">' + icon(k) + "</div><h3>" + esc(COVERAGE[k].short) + "</h3><p>" + esc(COVERAGE[k].blurb) + '</p><span class="more">Learn more →</span></a>').join("");
+    '<div class="card"><div class="ic">' + icon(k) + "</div><h3>" + esc(COVERAGE[k].cardTitle) + "</h3><p>" + esc(COVERAGE[k].card) + "</p>" +
+    '<div class="card-actions"><a href="#quote" class="btn btn-navy" data-pre="' + k + '">Get a quote</a><a href="#' + k + '" class="more">Learn more →</a></div></div>').join("");
 
   $("#footCov").innerHTML = KEYS.map(k => '<li><a href="#' + k + '">' + esc(COVERAGE[k].title) + "</a></li>").join("");
 
@@ -1114,31 +1160,88 @@
     '<label class="cov-opt"><input type="checkbox" name="cov" value="' + k + '" /><span class="ic">' + icon(k) + "</span><span><b>" + esc(COVERAGE[k].short) + "</b><small>" + esc(COVERAGE[k].blurb) + '</small></span><span class="box"></span></label>').join("");
 
   const pad2 = (n) => String(n).padStart(2, "0"), td = new Date(), todayStr = td.getFullYear() + "-" + pad2(td.getMonth() + 1) + "-" + pad2(td.getDate());
-  $("#state").insertAdjacentHTML("beforeend", STATES.map(s => "<option>" + s + "</option>").join(""));
 
   // One wizard step per coverage type
+  function qHTML(name, q) {
+    let inner, cls = "q";
+    if (q.fixed) {
+      return '<div class="q"><div class="q-label">' + esc(q.label) + '</div><div class="fixed-field">' + esc(q.fixed) + '<span>Serving South Carolina</span></div></div>';
+    }
+    if (q.text || q.date || q.zip) {
+      const extra = q.zip ? ' inputmode="numeric" maxlength="5" class="zip-in"' : (q.maxlength ? ' maxlength="' + q.maxlength + '"' : "") + (q.numeric ? ' inputmode="numeric"' : "") + (q.upper ? ' style="text-transform:uppercase"' : "");
+      inner = '<div class="field" style="margin:0"><input id="' + name + '" name="' + name + '" type="' + (q.date ? "date" : "text") + '" placeholder="' + esc(q.placeholder || (q.zip ? "e.g. 29201" : "")) + '"' + extra + ' /></div>';
+    } else if (q.select) {
+      inner = '<div class="field" style="margin:0"><select id="' + name + '" name="' + name + '"><option value="">Select…</option>' + q.select.map(o => "<option>" + esc(o) + "</option>").join("") + "</select></div>";
+    } else {
+      inner = '<div class="chips">' + q.opts.map(o =>
+        '<label class="chip"><input type="' + (q.multi ? "checkbox" : "radio") + '" name="' + name + '" value="' + esc(o) + '" />' + (q.multi ? '<span class="box"></span>' : "") + esc(o) + "</label>").join("") + "</div>";
+    }
+    return '<div class="' + cls + '" data-q="' + name + '"' + (q.optional ? "" : ' data-req="1"') + (q.text || q.date || q.zip || q.select ? ' data-text="1"' : "") + (q.zip ? ' data-zip="1"' : "") + ">" +
+      '<div class="q-label">' + esc(q.label) + (q.optional ? ' <span class="opt">(optional)</span>' : "") + (q.multi ? ' <span class="opt">— pick all that apply</span>' : "") + "</div>" +
+      inner + '<div class="err-msg">' + (q.zip ? "Enter a 5-digit ZIP code." : "Please answer this one.") + "</div></div>";
+  }
+  function wrapGrid(items) {
+    // items: [{html, grid}] → wrap consecutive grid items in a 2-column grid
+    let out = "", open = false;
+    items.forEach(it => {
+      if (it.grid && !open) { out += '<div class="qgrid">'; open = true; }
+      if (!it.grid && open) { out += "</div>"; open = false; }
+      out += it.grid === "full" ? it.html.replace('<div class="q"', '<div class="q full"') : it.html;
+    });
+    if (open) out += "</div>";
+    return out;
+  }
   $("#typeSteps").innerHTML = KEYS.map(k => {
     const c = COVERAGE[k];
+    const items = c.questions.map(q => {
+      if (q.h) return { html: '<div class="q-group">' + esc(q.h) + "</div>" };
+      let html = qHTML(k + "_" + q.id, q);
+      if (q.vehicles) html += '<div id="vehicleBlocks"></div>';
+      return { html, grid: q.full ? "full" : q.half ? "half" : null };
+    });
     return '<section class="wstep" data-key="' + k + '" data-name="' + esc(c.short) + '">' +
       '<span class="tag">' + icon(k) + esc(c.title) + "</span>" +
       "<h2>" + esc(c.stepTitle) + "</h2>" +
       '<p class="sub">' + esc(c.intro) + ' Best guesses are fine.</p>' +
       '<div class="step-err">Please answer the highlighted questions.</div>' +
-      c.questions.map(q => {
-        if (q.h) return '<div class="q-group">' + esc(q.h) + "</div>";
-        const name = k + "_" + q.id;
-        let inner;
-        if (q.text || q.date) {
-          inner = '<div class="field" style="margin:0"><input id="' + name + '" name="' + name + '" type="' + (q.date ? "date" : "text") + '" placeholder="' + esc(q.placeholder || "") + '" /></div>';
-        } else {
-          inner = '<div class="chips">' + q.opts.map(o =>
-            '<label class="chip"><input type="' + (q.multi ? "checkbox" : "radio") + '" name="' + name + '" value="' + esc(o) + '" />' + (q.multi ? '<span class="box"></span>' : "") + esc(o) + "</label>").join("") + "</div>";
-        }
-        return '<div class="q" data-q="' + name + '"' + (q.optional ? "" : ' data-req="1"') + (q.text || q.date ? ' data-text="1"' : "") + ">" +
-          '<div class="q-label">' + esc(q.label) + (q.optional ? ' <span class="opt">(optional)</span>' : "") + (q.multi ? ' <span class="opt">— pick all that apply</span>' : "") + "</div>" +
-          inner + '<div class="err-msg">Please answer this one.</div></div>';
-      }).join("") + "</section>";
+      wrapGrid(items) + "</section>";
   }).join("");
+
+  /* ---------- Auto: one detail block per vehicle ---------- */
+  const OWN = ["Paid Off", "Financed", "Leased"];
+  function vehicleBlock(i) {
+    const n = "auto_v" + i + "_";
+    return '<div class="vblock" data-v="' + i + '"><div class="vhead">' + icon("auto") + "Vehicle " + i + "</div>" +
+      '<div class="qgrid three">' +
+        qHTML(n + "year", { label: "Year", text: true, placeholder: "e.g. 2019", maxlength: 4, numeric: true }) +
+        qHTML(n + "make", { label: "Make", text: true, placeholder: "e.g. Honda" }) +
+        qHTML(n + "model", { label: "Model", text: true, placeholder: "e.g. CR-V" }) +
+      "</div>" +
+      qHTML(n + "vin", { label: "VIN", text: true, optional: true, placeholder: "17-character vehicle ID number", maxlength: 17, upper: true }) +
+      qHTML(n + "own", { label: "Is this vehicle paid off, financed, or leased?", opts: OWN }) +
+      '<div class="lender" id="' + n + 'lender">' +
+        '<div class="lender-title">Finance / leasing company <span class="opt">(optional — any state)</span></div>' +
+        qHTML(n + "lname", { label: "Company name", text: true, optional: true, placeholder: "e.g. Ally Financial" }) +
+        qHTML(n + "laddr", { label: "Mailing address", text: true, optional: true, placeholder: "PO Box or street" }) +
+        '<div class="qgrid three">' +
+          qHTML(n + "lcity", { label: "City", text: true, optional: true }) +
+          qHTML(n + "lstate", { label: "State", select: STATES, optional: true }) +
+          qHTML(n + "lzip", { label: "ZIP", text: true, optional: true, maxlength: 5, numeric: true }) +
+        "</div>" +
+      "</div></div>";
+  }
+  function renderVehicles() {
+    const box = $("#vehicleBlocks");
+    const n = parseInt(answerOf("auto_vehicles"), 10) || 0;
+    const have = $$(".vblock", box);
+    for (let i = have.length + 1; i <= n; i++) box.insertAdjacentHTML("beforeend", vehicleBlock(i));
+    $$(".vblock", box).forEach(b => { if (+b.dataset.v > n) b.remove(); });
+  }
+  document.addEventListener("change", (e) => {
+    if (e.target.name === "auto_vehicles") renderVehicles();
+    const m = e.target.name && e.target.name.match(/^auto_v(\d+)_own$/);
+    if (m) $("#auto_v" + m[1] + "_lender").classList.toggle("show", e.target.value !== "Paid Off");
+  });
   $$('#typeSteps input[type="date"]').forEach(i => i.min = todayStr);
 
   /* ================================================================
@@ -1161,7 +1264,7 @@
         '<div class="who">' + c.who.map(w => "<span>" + esc(w) + "</span>").join("") + "</div>" +
         "<h2>Questions we hear a lot</h2>" +
         '<div class="faq">' + c.faq.map(f => "<details><summary>" + esc(f[0]) + "</summary><p>" + esc(f[1]) + "</p></details>").join("") + "</div>" +
-        '<p style="color:var(--muted);font-size:13px;margin-top:18px">Coverage options vary by carrier and state. Your agent will explain exactly what your policy includes.</p>' +
+        '<p style="color:var(--muted);font-size:13px;margin-top:18px">Coverage options vary by carrier. Your agent will explain exactly what your policy includes.</p>' +
       "</div>" +
       '<aside class="side"><h3>Get your ' + esc(c.short.toLowerCase()) + " quote</h3>" +
         "<p>About 2 minutes. We'll compare carriers and get back to you — usually within one business day.</p>" +
@@ -1196,14 +1299,16 @@
     if (view === "quote") enterQuote();
 
     const t = { "": "Auto, Home, Renters, Landlord & Business Insurance", coverage: (COVERAGE[h] || {}).title, about: "About", contact: "Contact", quote: "Get a Quote", privacy: "Privacy Policy" }[view];
-    document.title = "Conway Guardian Insurance Agency — " + t;
+    document.title = "Conway Guardian Insurance Group — " + t;
     window.scrollTo(0, 0);
   }
 
   // Remember which coverage a "Get a quote" button was for
   document.addEventListener("click", (e) => {
     const a = e.target.closest("[data-pre]");
-    if (a) pendingPre = a.dataset.pre.split(",");
+    if (!a) return;
+    pendingPre = a.dataset.pre.split(",");
+    if (location.hash === "#quote") { e.preventDefault(); route(); }
   });
 
   /* Menus */
@@ -1239,20 +1344,19 @@
 
   function enterQuote() {
     if (!$("#quoteDone").hidden) { // start fresh after a finished request
-      form.reset(); cur = 0; updateBundle();
+      form.reset(); cur = 0; updateBundle(); $("#vehicleBlocks").innerHTML = "";
       $$(".bad", form).forEach(x => x.classList.remove("bad"));
       $$(".step-err", form).forEach(x => x.classList.remove("show"));
       const sb = $("#sendBtn"); sb.disabled = false; sb.textContent = "Send my quote request →";
       $("#quoteDone").hidden = true; form.hidden = false;
     }
     if (pendingPre && pendingPre.length) {
-      // Only apply a preselection if the visitor hasn't already moved past step 1
-      if (cur === 0) {
-        $$('input[name="cov"]', form).forEach(i => { i.checked = pendingPre.includes(i.value); });
-        updateBundle();
-        // From the hero quick-start: they already picked, so jump ahead
-        if (fromQuick && pendingPre.length) { buildSeq(); cur = 1; }
-      }
+      // A category link or "Get a quote" button opens that coverage's form directly.
+      // Answers already typed are kept; only the coverage selection changes.
+      $$('input[name="cov"]', form).forEach(i => { i.checked = pendingPre.includes(i.value); });
+      updateBundle();
+      $(".step-err", stepEl("coverage")).classList.remove("show");
+      buildSeq(); cur = 1;
       pendingPre = null;
     }
     fromQuick = false;
@@ -1277,7 +1381,7 @@
   function answerOf(name, multi) {
     const inputs = $$('[name="' + name + '"]', form);
     if (!inputs.length) return multi ? [] : "";
-    if (inputs[0].type === "text" || inputs[0].tagName === "INPUT" && inputs[0].type !== "radio" && inputs[0].type !== "checkbox") return inputs[0].value.trim();
+    if (inputs[0].tagName === "SELECT" || inputs[0].type === "text" || inputs[0].tagName === "INPUT" && inputs[0].type !== "radio" && inputs[0].type !== "checkbox") return inputs[0].value.trim();
     const v = inputs.filter(i => i.checked).map(i => i.value);
     return inputs[0].type === "checkbox" ? v : (v[0] || "");
   }
@@ -1292,11 +1396,10 @@
       $$(".q[data-req]", s).forEach(q => {
         const name = q.dataset.q;
         const v = q.dataset.text ? $("#" + name).value.trim() : $$('[name="' + name + '"]:checked', s).length;
-        mark(q, !v);
+        mark(q, !v || (q.dataset.zip && !/^\d{5}$/.test(v)));
       });
       if (key === "about") {
         mark($("#zip-f"), !/^\d{5}$/.test($("#zip").value.trim()));
-        mark($("#state-f"), !$("#state").value);
       }
     } else if (key === "contact") {
       mark($("#first-f"), !$("#first").value.trim());
@@ -1341,7 +1444,10 @@
 
   formatPhone($("#phone"));
   formatPhone($("#cf-phone"));
-  $("#zip").addEventListener("input", (e) => { e.target.value = e.target.value.replace(/\D/g, "").slice(0, 5); });
+  document.addEventListener("input", (e) => {
+    const t = e.target;
+    if (t.id === "zip" || (t.getAttribute && t.getAttribute("inputmode") === "numeric" && t.maxLength > 0)) t.value = t.value.replace(/\D/g, "").slice(0, t.maxLength > 0 ? t.maxLength : 5);
+  });
 
   /* ---------- Collect everything into labeled sections ---------- */
   function collectSections() {
@@ -1351,16 +1457,32 @@
       const c = COVERAGE[k];
       sections.push({
         key: k, title: c.title,
-        rows: c.questions.filter(q => !q.h).map(q => {
+        rows: c.questions.filter(q => !q.h).flatMap(q => {
+          if (q.fixed) return [[q.short, "SC"]];
           let v = answerOf(k + "_" + q.id, q.multi);
           if (Array.isArray(v)) v = v.join(", ");
           if (q.date && v) { const [y, m, d] = v.split("-"); v = m + "/" + d + "/" + y; }
-          return v || q.optional ? [q.short || q.label, v] : [q.short || q.label, "—"];
+          const row = v || q.optional ? [q.short || q.label, v] : [q.short || q.label, "—"];
+          if (!q.vehicles) return [row];
+          const rows = [row];
+          for (let i = 1; i <= (parseInt(v, 10) || 0); i++) {
+            const g = (f) => { const el = $("#auto_v" + i + "_" + f); return el ? el.value.trim() : ""; };
+            const own = answerOf("auto_v" + i + "_own");
+            rows.push(["Vehicle " + i, [g("year"), g("make"), g("model")].filter(Boolean).join(" ")]);
+            if (g("vin")) rows.push(["Vehicle " + i + " VIN", g("vin").toUpperCase()]);
+            rows.push(["Vehicle " + i + " ownership", own || "—"]);
+            if (own && own !== "Paid Off") {
+              const lender = [g("lname"), g("laddr"), [g("lcity"), g("lstate")].filter(Boolean).join(", ") + (g("lzip") ? " " + g("lzip") : "")].filter(x => x && x.trim()).join(", ");
+              if (lender) rows.push(["Vehicle " + i + " " + (own === "Leased" ? "leasing co." : "lender"), lender]);
+            }
+          }
+          return rows;
         }).filter(r => r[1]),
       });
     });
     sections.push({ key: "about", title: "Location & preferences", rows: [
-      ["ZIP / State", $("#zip").value.trim() + " · " + $("#state").value],
+      ["Address", [$("#street").value.trim(), $("#city").value.trim()].filter(Boolean).join(", ") || "—"],
+      ["State / ZIP", "SC " + $("#zip").value.trim()],
       ["Contact by", answerOf("contactPref") || "—"],
       ["Best time", answerOf("bestTime") || "Any"],
     ] });
@@ -1397,14 +1519,15 @@
 
     const sections = collectSections();
     const name = $("#first").value.trim() + " " + $("#last").value.trim();
-    const subject = "New quote request: " + selected().map(k => COVERAGE[k].short).join(" + ") + " — " + name + " (" + $("#zip").value.trim() + ", " + $("#state").value + ")";
+    const subject = "New quote request: " + selected().map(k => COVERAGE[k].short).join(" + ") + " — " + name + " (SC " + $("#zip").value.trim() + ")";
 
-    if (QUOTE_FORM_ID) {
-      const payload = { _subject: subject, _replyto: $("#email").value.trim() };
+    const quoteURL = endpointFor(QUOTE_FORM_ID);
+    if (quoteURL) {
+      const payload = { _subject: subject, _replyto: $("#email").value.trim(), _template: "table", _captcha: "false" };
       sections.forEach(s => s.rows.forEach(r => { payload[s.title + " — " + r[0]] = r[1]; }));
       const btn = $("#sendBtn"); btn.disabled = true; btn.textContent = "Sending…";
       try {
-        const res = await fetch("https://formspree.io/f/" + QUOTE_FORM_ID, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
+        const res = await fetch(quoteURL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
         if (!res.ok) throw new Error(res.status);
         showDone(subject, sections, true);
       } catch (err) {
@@ -1462,20 +1585,22 @@
     const topic = $("#cf-topic").value;
     const sections = [{ title: "Message", rows: [["Name", n], ["Email", em], ["Phone", $("#cf-phone").value.trim() || "—"], ["Topic", topic], ["Message", m]] }];
     const subject = "Website message: " + topic + " — " + n;
-    if (CONTACT_FORM_ID) {
+    const contactURL = endpointFor(CONTACT_FORM_ID);
+    if (contactURL) {
       try {
-        const res = await fetch("https://formspree.io/f/" + CONTACT_FORM_ID, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ _subject: subject, _replyto: em, name: n, email: em, phone: $("#cf-phone").value.trim(), topic, message: m }) });
+        const res = await fetch(contactURL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ _subject: subject, _replyto: em, name: n, email: em, phone: $("#cf-phone").value.trim(), topic, message: m }) });
         if (!res.ok) throw 0;
       } catch (x) { alertInline($("#contactForm").firstElementChild, "Couldn't send — please try again."); return; }
     }
     $("#contactPanel").innerHTML = '<div class="done"><div class="check">✓</div><h2>Message sent</h2><p>Thanks, ' + esc(n.split(" ")[0]) + ". We'll get back to you within one business day.</p>" +
-      (CONTACT_FORM_ID ? "" : '<div class="demo-label">Prototype preview · agency inbox</div>' + emailPreview(subject, sections, n, em)) + "</div>";
+      (contactURL ? "" : '<div class="demo-label">Prototype preview · agency inbox</div>' + emailPreview(subject, sections, n, em)) + "</div>";
   });
   $("#contactForm").addEventListener("input", (e) => { const f = e.target.closest(".field.bad"); if (f) f.classList.remove("bad"); });
 
   /* ================================================================
      INIT
      ================================================================ */
+  $$(".js-tel").forEach(a => a.href = telHref()); // after all menus/cards are built
   window.addEventListener("hashchange", route);
   route();
 })();
