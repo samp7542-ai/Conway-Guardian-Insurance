@@ -10,6 +10,7 @@ package.json
 package-lock.json
 playwright.config.js
 _config.yml
+CNAME
 wrangler.jsonc
 .assetsignore
 .gitignore
