@@ -5,6 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Conway Guardian Insurance Group — Auto, Home, Renters, Landlord & Business Insurance</title>
 <meta name="description" content="Conway Guardian Insurance Group is an independent insurance agency proudly serving South Carolina. We compare coverage options from multiple carriers for auto, home, renters, landlord and business insurance." />
+<link rel="icon" type="image/png" href="assets/favicon-64.png" />
+<link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+<meta property="og:image" content="assets/logo-512.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,700&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -51,8 +54,8 @@
   }
   header.site .wrap { display: flex; align-items: center; gap: 22px; height: 72px; }
   .logo { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); }
-  .logo .mark { width: 40px; height: 40px; border-radius: 11px; background: var(--navy); color: var(--gold); display: grid; place-items: center; }
-  .logo .mark svg { width: 24px; height: 24px; }
+  .logo .mark { width: 50px; height: 50px; border-radius: 50%; flex: none; object-fit: contain; filter: drop-shadow(0 2px 4px rgba(11,37,69,.25)); }
+  footer .logo .mark { width: 64px; height: 64px; filter: none; }
   .logo .name { font-family: var(--serif); font-weight: 700; font-size: 19px; line-height: 1.05; letter-spacing: -.01em; }
   .logo .name small { display: block; font-family: var(--sans); font-size: 10.5px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); margin-top: 3px; }
 
@@ -171,6 +174,33 @@
   .quick .btn { width: 100%; }
   .quick .err { color: var(--danger); font-size: 13.5px; font-weight: 600; margin: -6px 0 10px; display: none; }
   .quick .err.show { display: block; }
+
+  /* ---------- Carrier logo marquee ---------- */
+  .partners { background: #fff; border-bottom: 1px solid var(--line); padding: 40px 0 34px; text-align: center; }
+  .partners-title { font-size: 17px; color: var(--ink-2); margin-bottom: 26px; }
+  .partners-title b { color: var(--navy); }
+  .partners-note { font-size: 13px; color: var(--muted); margin-top: 24px; }
+  .partners-note b { color: var(--navy-3); }
+  .marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent); }
+  .marquee-track { display: flex; width: max-content; animation: marquee 40s linear infinite; }
+  .marquee:hover .marquee-track { animation-play-state: paused; }
+  .marquee ul { display: flex; align-items: center; list-style: none; flex: none; }
+  .marquee li { flex: none; padding: 0 36px; }
+  .marquee img { display: block; height: 44px; width: auto; max-width: 220px; object-fit: contain; }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @media (max-width: 700px) {
+    .partners { padding: 30px 0 26px; }
+    .partners-title { font-size: 15px; margin-bottom: 18px; padding: 0 8px; }
+    .marquee li { padding: 0 22px; }
+    .marquee img { height: 32px; max-width: 150px; }
+    .marquee-track { animation-duration: 28s; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .marquee { -webkit-mask-image: none; mask-image: none; }
+    .marquee-track { width: auto; }
+    .marquee ul { flex-wrap: wrap; justify-content: center; row-gap: 18px; width: 100%; }
+    .marquee ul[aria-hidden] { display: none; }
+  }
 
   /* ---------- Coverage cards ---------- */
   .cards { display: grid; grid-template-columns: repeat(5, 1fr); gap: 16px; margin-top: 40px; }
@@ -515,7 +545,7 @@
 <header class="site">
   <div class="wrap">
     <a href="#" class="logo" aria-label="Conway Guardian Insurance Group — home">
-      <span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span>
+      <img class="mark" src="assets/logo-512.webp" alt="" width="48" height="48" />
       <span class="name">Conway Guardian<small>Insurance Group</small></span>
     </a>
     <nav class="main" aria-label="Main">
@@ -536,7 +566,7 @@
 
 <div class="mobile-nav" id="mobileNav" role="dialog" aria-label="Menu">
   <div class="head">
-    <a href="#" class="logo"><span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span><span class="name">Conway Guardian<small>Insurance Group</small></span></a>
+    <a href="#" class="logo"><img class="mark" src="assets/logo-512.webp" alt="" width="48" height="48" /><span class="name">Conway Guardian<small>Insurance Group</small></span></a>
     <button class="burger" style="display:grid" id="closeNav" aria-label="Close menu"><svg class="ico"><use href="#i-x"/></svg></button>
   </div>
   <div class="links" id="mobileLinks"></div>
@@ -569,6 +599,21 @@
           <div class="err" id="quickErr">Pick at least one to get started.</div>
           <button type="button" class="btn btn-navy btn-lg" id="quickGo">Start my quote →</button>
         </form>
+      </div>
+    </section>
+
+    <section class="partners" aria-labelledby="partnersTitle">
+      <div class="wrap">
+        <p class="partners-title" id="partnersTitle">We shop <b>multiple insurance carriers &amp; markets</b> to find coverage that fits you</p>
+      </div>
+      <div class="marquee">
+        <div class="marquee-track">
+          <ul><li><img src="assets/carriers/progressive.webp" alt="Progressive" height="44" decoding="async" /></li><li><img src="assets/carriers/national-general.webp" alt="National General, an Allstate company" height="44" decoding="async" /></li><li><img src="assets/carriers/foremost.webp" alt="Foremost Insurance Group" height="44" decoding="async" /></li><li><img src="assets/carriers/bristol-west.webp" alt="Bristol West" height="44" decoding="async" /></li><li><img src="assets/carriers/steadily.webp" alt="Steadily" height="44" decoding="async" /></li><li><img src="assets/carriers/reinsurepro.webp" alt="REInsurePro" height="44" decoding="async" /></li><li><img src="assets/carriers/pathpoint.webp" alt="Pathpoint" height="44" decoding="async" /></li><li><img src="assets/carriers/annex-risk.webp" alt="Annex Risk" height="44" decoding="async" /></li></ul>
+          <ul aria-hidden="true"><li><img src="assets/carriers/progressive.webp" alt="" height="44" decoding="async" /></li><li><img src="assets/carriers/national-general.webp" alt="" height="44" decoding="async" /></li><li><img src="assets/carriers/foremost.webp" alt="" height="44" decoding="async" /></li><li><img src="assets/carriers/bristol-west.webp" alt="" height="44" decoding="async" /></li><li><img src="assets/carriers/steadily.webp" alt="" height="44" decoding="async" /></li><li><img src="assets/carriers/reinsurepro.webp" alt="" height="44" decoding="async" /></li><li><img src="assets/carriers/pathpoint.webp" alt="" height="44" decoding="async" /></li><li><img src="assets/carriers/annex-risk.webp" alt="" height="44" decoding="async" /></li></ul>
+        </div>
+      </div>
+      <div class="wrap">
+        <p class="partners-note"><b>And many more.</b> Carrier availability and coverage options vary by eligibility, underwriting guidelines, and product availability.</p>
       </div>
     </section>
 
@@ -844,7 +889,7 @@
   <div class="wrap">
     <div class="cols">
       <div>
-        <a href="#" class="logo"><span class="mark"><svg class="ico"><use href="#i-shield"/></svg></span><span class="name">Conway Guardian<small>Insurance Group</small></span></a>
+        <a href="#" class="logo"><img class="mark" src="assets/logo-512.webp" alt="" width="48" height="48" /><span class="name">Conway Guardian<small>Insurance Group</small></span></a>
         <p style="max-width:300px">Independent insurance agency proudly serving individuals, families, property owners and businesses in South Carolina.</p>
       </div>
       <div><h5>Coverage</h5><ul id="footCov"></ul></div>

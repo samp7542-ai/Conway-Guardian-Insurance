@@ -1,0 +1,21 @@
+{
+  "name": "conway-guardian-insurance-group",
+  "version": "1.0.0",
+  "description": "Conway Guardian Insurance Group website",
+  "scripts": {
+    "check": "playwright test",
+    "check:report": "playwright show-report"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/samp7542-ai/Conway-Guardian-Insurance.git"
+  },
+  "bugs": {
+    "url": "https://github.com/samp7542-ai/Conway-Guardian-Insurance/issues"
+  },
+  "homepage": "https://github.com/samp7542-ai/Conway-Guardian-Insurance#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.65.0"
+  },
+  "private": true
+}
