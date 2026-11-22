@@ -122,18 +122,17 @@ async function fillVisibleStep(page) {
       if (/^auto_v\d+_own$/.test(name)) pick = 1;                  // "Financed": tests the lender section
       await options.nth(pick).locator("xpath=ancestor::label[1]").click();
     }
-    // Text, date and dropdown questions
+    // Text, date and dropdown questions (only the ones on screen)
     const fields = step.locator("input[type=text], input[type=tel], input[type=email], input[type=date], input:not([type]), select, textarea");
-    const n = await fields.count();
-    for (let i = 0; i < n; i++) {
+    const todo = await fields.evaluateAll((els) => els.map((el, i) => ({ i, show: el.offsetParent !== null, filled: !!el.value })).filter((x) => x.show && !x.filled).map((x) => x.i));
+    if (!groups.length && !todo.length) break;
+    for (const i of todo) {
       const f = fields.nth(i);
-      if (!(await f.isVisible())) continue;
       const tag = await f.evaluate((el) => el.tagName);
       if (tag === "SELECT") {
-        if (!(await f.inputValue())) await f.selectOption({ index: 1 });
+        await f.selectOption({ index: 1 });
         continue;
       }
-      if (await f.inputValue()) continue;
       const id = (await f.getAttribute("id")) || "";
       const type = (await f.getAttribute("type")) || "text";
       const max = Number(await f.getAttribute("maxlength")) || 0;
@@ -151,7 +150,7 @@ async function fillVisibleStep(page) {
     }
     // Consent checkbox on the contact step
     const consent = step.locator("#consent");
-    if ((await consent.count()) && !(await consent.isChecked())) await step.locator("#consent-f").click();
+    if ((await consent.count()) && (await step.locator("#consent-f").isVisible()) && !(await consent.isChecked())) await step.locator("#consent-f").click();
   }
 }
 
@@ -159,7 +158,7 @@ async function runQuote(page, keys) {
   await open(page, "quote");
   for (const k of keys) await page.locator(`label.cov-opt:has(input[value="${k}"])`).click();
   const next = page.locator("#wizNext");
-  for (let guard = 0; guard < 15; guard++) {
+  for (let guard = 0; guard < 150; guard++) { // one question per screen, so many screens
     if (await page.locator("#sendBtn").isVisible()) break;
     await fillVisibleStep(page);
     const before = await page.locator("#wizName").innerText();
@@ -279,21 +278,35 @@ test("Mobile menu opens, every link works, and it closes (mobile)", async ({ pag
 /* ------------------------------------------------------------------ */
 /* 4. Home page quick picker and "quote this" buttons                  */
 /* ------------------------------------------------------------------ */
-test("Home quick picker: goes to the quote form, carrying over whatever was picked", async ({ page }) => {
+test("Home quick picker: only one choice at a time, and it carries over to the quote form", async ({ page }) => {
   // Nothing picked: goes straight to the quote form with nothing pre-selected
   await open(page, "");
   await page.locator("#quickGo").click();
   await expect(page.locator('.view.on[data-view="quote"]')).toBeVisible();
   await expect(page.locator("#covGrid input:checked")).toHaveCount(0);
-  // Two picked: both carried over
+  // Picking a second option replaces the first
   await open(page, "");
   await clickChip(page.locator("#quickOpts"), "auto");
   await clickChip(page.locator("#quickOpts"), "renters");
+  await expect(page.locator("#quickOpts input:checked")).toHaveCount(1);
   await page.locator("#quickGo").click();
   await expect(page.locator('.view.on[data-view="quote"]')).toBeVisible();
-  await expect(page.locator('#covGrid input[value="auto"]')).toBeChecked();
   await expect(page.locator('#covGrid input[value="renters"]')).toBeChecked();
-  await expect(page.locator('#covGrid input[value="homeowners"]')).not.toBeChecked();
+  await expect(page.locator('#covGrid input[value="auto"]')).not.toBeChecked();
+});
+
+test("Quote form shows one question per screen", async ({ page }) => {
+  await open(page, "quote");
+  await page.locator('label.cov-opt:has(input[value="auto"])').click();
+  await page.locator("#wizNext").click();
+  const visibleQuestions = () => page.locator("#quoteForm .wstep.on").evaluate((s) =>
+    [...s.querySelectorAll(".q[data-q], .vblock, .field")].filter((el) => el.offsetParent !== null && !el.parentElement.closest(".vblock, .q")).length);
+  for (let i = 0; i < 6; i++) {
+    expect(await visibleQuestions(), `Screen ${i + 1} should show exactly one question`).toBe(1);
+    await expect(page.locator("#wizCount")).toHaveText(/^Question \d+ of \d+$/);
+    await fillVisibleStep(page);
+    await page.locator("#wizNext").click();
+  }
 });
 
 for (const k of COVERAGE_KEYS) {
@@ -324,12 +337,13 @@ test("FAQ questions open and close", async ({ page }) => {
 /* ------------------------------------------------------------------ */
 for (const k of COVERAGE_KEYS) {
   test(`Quote form works end to end for ${k}`, async ({ page }) => {
+    test.setTimeout(180_000);
     await runQuote(page, [k]);
   });
 }
 
 test("Quote form works end to end with all five coverage types at once", async ({ page }) => {
-  test.setTimeout(120_000);
+  test.setTimeout(400_000);
   await runQuote(page, COVERAGE_KEYS);
 });
 
@@ -346,9 +360,10 @@ test("Quote form blocks Continue until required questions are answered", async (
 });
 
 test("Quote form Back button and review-page Edit buttons work", async ({ page }) => {
+  test.setTimeout(240_000);
   await open(page, "quote");
   await page.locator('label.cov-opt:has(input[value="renters"])').click();
-  for (let i = 0; i < 6 && !(await page.locator("#sendBtn").isVisible()); i++) {
+  for (let i = 0; i < 60 && !(await page.locator("#sendBtn").isVisible()); i++) {
     await fillVisibleStep(page);
     await page.locator("#wizNext").click();
   }
@@ -360,7 +375,7 @@ test("Quote form Back button and review-page Edit buttons work", async ({ page }
     const key = await edits.nth(i).getAttribute("data-edit");
     await edits.nth(i).click();
     await expect(page.locator(`.wstep.on[data-key="${key}"]`), `Edit should jump to the ${key} step`).toBeVisible();
-    for (let j = 0; j < 6 && !(await page.locator("#sendBtn").isVisible()); j++) await page.locator("#wizNext").click();
+    for (let j = 0; j < 60 && !(await page.locator("#sendBtn").isVisible()); j++) await page.locator("#wizNext").click();
   }
   await page.locator("#wizBack").click();
   await expect(page.locator('.wstep.on[data-key="contact"]')).toBeVisible();
