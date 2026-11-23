@@ -156,6 +156,9 @@ async function fillVisibleStep(page) {
 
 async function runQuote(page, keys) {
   await open(page, "quote");
+  await runQuoteFromHere(page, keys);
+}
+async function runQuoteFromHere(page, keys) {
   for (const k of keys) await page.locator(`label.cov-opt:has(input[value="${k}"])`).click();
   const next = page.locator("#wizNext");
   for (let guard = 0; guard < 150; guard++) { // one question per screen, so many screens
@@ -198,7 +201,7 @@ for (const v of VIEWS) {
 /* ------------------------------------------------------------------ */
 for (const v of VIEWS) {
   test(`every button and link on the ${v.name} page works`, async ({ page }) => {
-    test.setTimeout(240_000);
+    test.setTimeout(600_000); // the home page has dozens of links
     await open(page, v.hash);
     const items = await markClickables(page);
     expect(items.length, "Found no buttons to click").toBeGreaterThan(0);
@@ -217,6 +220,17 @@ for (const v of VIEWS) {
       }
       if (realHref && /^(mailto:|https?:)/.test(realHref)) {
         expect(() => new URL(realHref), `"${label}" has a broken link`).not.toThrow();
+        continue;
+      }
+      if (realHref && realHref.startsWith("sms:")) {
+        expect(realHref.replace(/\D/g, "").length, `"${label}" text link has a bad number: ${realHref}`).toBeGreaterThanOrEqual(10);
+        continue;
+      }
+      if (realHref && !realHref.startsWith("#") && realHref !== "") {
+        // A link to another page of the site (e.g. refer/): make sure that page exists
+        const url = new URL(realHref, page.url());
+        const res = await page.request.get(url.pathname.endsWith("/") ? url.pathname + "index.html" : url.pathname);
+        expect(res.status(), `"${label}" links to a missing page: ${realHref}`).toBeLessThan(400);
         continue;
       }
 
@@ -300,8 +314,8 @@ test("Quote form shows one question per screen", async ({ page }) => {
   await page.locator('label.cov-opt:has(input[value="auto"])').click();
   await page.locator("#wizNext").click();
   const visibleQuestions = () => page.locator("#quoteForm .wstep.on").evaluate((s) =>
-    [...s.querySelectorAll(".q[data-q], .vblock, .field")].filter((el) => el.offsetParent !== null && !el.parentElement.closest(".vblock, .q")).length);
-  for (let i = 0; i < 6; i++) {
+    [...s.querySelectorAll(".q[data-q], .vblock, .field, .g2")].filter((el) => el.offsetParent !== null && el.offsetHeight > 0 && !el.parentElement.closest(".vblock, .q, .g2")).length);
+  for (let i = 0; i < 8; i++) {
     expect(await visibleQuestions(), `Screen ${i + 1} should show exactly one question`).toBe(1);
     await expect(page.locator("#wizCount")).toHaveText(/^Question \d+ of \d+$/);
     await fillVisibleStep(page);
@@ -353,11 +367,105 @@ test("Quote form blocks Continue until required questions are answered", async (
   await expect(page.locator('.wstep[data-key="coverage"] .step-err')).toBeVisible();
   await page.locator('label.cov-opt:has(input[value="renters"])').click();
   await page.locator("#wizNext").click();
-  await expect(page.locator("#wizName")).toHaveText(/Renters/);
+  await expect(page.locator("#wizName")).toHaveText(/Contact/); // contact info comes first
   await page.locator("#wizNext").click(); // nothing answered yet
   await expect(page.locator("#quoteForm .wstep.on .step-err")).toBeVisible();
-  await expect(page.locator("#wizName")).toHaveText(/Renters/);
+  await expect(page.locator("#wizName")).toHaveText(/Contact/);
 });
+
+test("Quote form emails a 'quote started' lead as soon as contact info is given", async ({ page }) => {
+  const sent = [];
+  await page.route(/formsubmit\.co/, async (route) => {
+    sent.push(JSON.parse(route.request().postData() || "{}"));
+    await route.fulfill({ status: 200, contentType: "application/json", body: '{"success":"true"}' });
+  });
+  await open(page, "quote");
+  await page.locator('label.cov-opt:has(input[value="auto"])').click();
+  await page.locator("#wizNext").click();
+  for (let i = 0; i < 3; i++) { await fillVisibleStep(page); await page.locator("#wizNext").click(); }
+  await expect(page.locator("#wizName")).toHaveText(/Auto/);
+  await expect.poll(() => sent.length).toBe(1);
+  expect(sent[0]._subject).toMatch(/^Quote started \(not finished yet\): Auto — Testy McTester$/);
+  expect(sent[0].Phone).toBeTruthy();
+});
+
+test("Links from landing pages pre-select the coverage (#quote-auto)", async ({ page }) => {
+  await page.goto("about:blank");
+  await page.goto("/index.html#quote-landlord");
+  await expect(page.locator('.view.on[data-view="quote"]')).toBeVisible();
+  await expect(page.locator('#covGrid input[value="landlord"]')).toBeChecked();
+  await expect(page.locator(".wstep.on")).toHaveAttribute("data-key", "contact");
+});
+
+test("Browser Back leaves the thank-you page in one step", async ({ page }) => {
+  test.setTimeout(180_000);
+  await page.goto("about:blank");
+  await page.goto("/index.html#about");
+  await page.goto("/index.html#quote");
+  await runQuoteFromHere(page, ["renters"]);
+  await page.goBack();
+  await expect(page.locator('.view.on[data-view="about"]')).toBeVisible();
+});
+
+test("Editing coverage on the review page asks the new coverage's questions", async ({ page }) => {
+  test.setTimeout(180_000);
+  await open(page, "quote");
+  await page.locator('label.cov-opt:has(input[value="renters"])').click();
+  for (let i = 0; i < 80 && !(await page.locator("#sendBtn").isVisible()); i++) { await fillVisibleStep(page); await page.locator("#wizNext").click(); }
+  await page.locator('#reviewBox [data-edit="coverage"]').click();
+  await page.locator('label.cov-opt:has(input[value="auto"])').click();
+  await page.locator("#wizNext").click();
+  await expect(page.locator("#wizName")).toHaveText(/Auto/);
+});
+
+test("On-screen Back and the browser's Back agree", async ({ page }) => {
+  await open(page, "quote");
+  await page.locator('label.cov-opt:has(input[value="auto"])').click();
+  await page.locator("#wizNext").click();
+  for (let i = 0; i < 5; i++) { await fillVisibleStep(page); await page.locator("#wizNext").click(); }
+  const at = await page.locator("#wizCount").innerText();
+  await page.locator("#wizBack").click();
+  const prev = await page.locator("#wizCount").innerText();
+  expect(prev).not.toBe(at);
+  await page.goBack();
+  await expect(page.locator("#wizCount")).not.toHaveText(at); // must not jump forward again
+});
+
+const LANDING = ["sr22-insurance-sc", "cheap-car-insurance-sc", "landlord-insurance-sc", "es", "refer", "partners"];
+for (const slug of LANDING) {
+  test(`Landing page /${slug}/ loads with its links working`, async ({ page, request }) => {
+    await page.goto(`/${slug}/`);
+    await expect(page.locator("h1")).toHaveCount(1);
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute("href", `https://conwayguardianins.com/${slug}/`);
+    const hrefs = await page.locator("a[href^='/']").evaluateAll((as) => [...new Set(as.map((a) => a.getAttribute("href").split("#")[0]))]);
+    for (const h of hrefs) {
+      const res = await request.get(h === "/" ? "/index.html" : h + (h.endsWith("/") ? "index.html" : ""));
+      expect(res.status(), `Link ${h} on /${slug}/`).toBeLessThan(400);
+    }
+  });
+}
+
+for (const slug of ["es", "refer", "partners"]) {
+  test(`Form on /${slug}/ shows errors when empty and sends when filled in`, async ({ page }) => {
+    await page.goto(`/${slug}/`);
+    const form = page.locator("form[data-lead]");
+    await form.locator('button[type="submit"]').click();
+    await expect(form.locator(".field.bad").first()).toBeVisible();
+    for (const f of await form.locator(".field").all()) {
+      const inp = f.locator("input, select, textarea").first();
+      if (!(await inp.evaluate((el) => el.required))) continue;
+      const tag = await inp.evaluate((el) => el.tagName);
+      const type = await inp.getAttribute("type");
+      if (tag === "SELECT") await inp.selectOption({ index: 1 });
+      else if (type === "tel") await inp.fill("8035550123");
+      else if (type === "email") await inp.fill("test@example.com");
+      else await inp.fill("Test Person");
+    }
+    await form.locator('.check input[type="checkbox"]').check();
+    await form.locator('button[type="submit"]').click();
+    await expect(page.locator(".done")).toBeVisible();
+  });
+}
 
 test("Quote form Back button and review-page Edit buttons work", async ({ page }) => {
   test.setTimeout(240_000);
@@ -378,7 +486,7 @@ test("Quote form Back button and review-page Edit buttons work", async ({ page }
     for (let j = 0; j < 60 && !(await page.locator("#sendBtn").isVisible()); j++) await page.locator("#wizNext").click();
   }
   await page.locator("#wizBack").click();
-  await expect(page.locator('.wstep.on[data-key="contact"]')).toBeVisible();
+  await expect(page.locator('.wstep.on[data-key="about"]')).toBeVisible();
 });
 
 /* ------------------------------------------------------------------ */
