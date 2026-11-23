@@ -1,0 +1,41 @@
+<!-- Conway Guardian lead email (Design A). Paste into EmailJS → Email Templates → Code Editor.
+     Variables come from assets/lead-mail.js. {{{triple}}} = HTML built (and escaped) by the site. -->
+<div style="margin:0;padding:24px 12px;background:#eef1f5;font-family:Arial,Helvetica,sans-serif;color:#0f172a">
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;margin:0 auto;background:#ffffff;border:1px solid #dbe2ea;border-radius:14px;border-collapse:separate;overflow:hidden">
+  <tr>
+    <td style="background:#0b2545;padding:18px 24px">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+        <td style="color:#ffffff">
+          <div style="font-family:Georgia,'Times New Roman',serif;font-size:20px;font-weight:bold;line-height:1.1">Conway Guardian</div>
+          <div style="font-size:10px;letter-spacing:2px;text-transform:uppercase;color:#cbd5e1;font-weight:bold">Insurance Group</div>
+        </td>
+        <td align="right"><span style="display:inline-block;background:#d9a441;color:#0b2545;font-weight:bold;font-size:11px;letter-spacing:.5px;padding:6px 12px;border-radius:99px">{{badge}}</span></td>
+      </tr></table>
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:24px 24px 6px">
+      <div style="font-size:13px;color:#475569;font-weight:bold">{{when}} · {{source}}</div>
+      <div style="font-family:Georgia,'Times New Roman',serif;font-size:30px;font-weight:bold;color:#0b2545;margin:6px 0 10px">{{name}}</div>
+      <div style="margin:0 0 16px">{{{tags_html}}}</div>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;border-collapse:separate">
+        <tr>
+          <td width="50%" valign="top" style="padding:14px 16px 6px"><div style="font-size:11px;color:#475569;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Phone</div><div style="font-size:18px;font-weight:bold">{{phone}}</div></td>
+          <td width="50%" valign="top" style="padding:14px 16px 6px"><div style="font-size:11px;color:#475569;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Prefers</div><div style="font-size:18px;font-weight:bold">{{prefers}}</div></td>
+        </tr>
+        <tr>
+          <td valign="top" style="padding:8px 16px 14px"><div style="font-size:11px;color:#475569;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Email</div><div style="font-size:15px;font-weight:bold;word-break:break-all">{{email}}</div></td>
+          <td valign="top" style="padding:8px 16px 14px"><div style="font-size:11px;color:#475569;font-weight:bold;text-transform:uppercase;letter-spacing:1px">Location</div><div style="font-size:15px;font-weight:bold">{{location}}</div></td>
+        </tr>
+      </table>
+      {{{buttons_html}}}
+    </td>
+  </tr>
+  <tr>
+    <td style="padding:6px 24px 24px">
+      {{{details_html}}}
+      <div style="font-size:12px;color:#475569;margin-top:20px;line-height:1.5">{{footer}}</div>
+    </td>
+  </tr>
+</table>
+</div>
