@@ -431,7 +431,45 @@ test("On-screen Back and the browser's Back agree", async ({ page }) => {
   await expect(page.locator("#wizCount")).not.toHaveText(at); // must not jump forward again
 });
 
-const LANDING = ["sr22-insurance-sc", "cheap-car-insurance-sc", "landlord-insurance-sc", "es", "refer", "partners"];
+test("Quick auto estimate: shows a price range, emails the lead and books a call", async ({ page }) => {
+  const sent = [];
+  await page.route(/formsubmit\.co/, async (route) => {
+    sent.push(JSON.parse(route.request().postData() || "{}"));
+    await route.fulfill({ status: 200, contentType: "application/json", body: '{"success":"true"}' });
+  });
+  await page.goto("/auto-estimate/");
+  const next = page.locator("#est-next");
+  await next.click();
+  await expect(page.locator('[data-need="zip"].bad')).toBeVisible(); // ZIP required
+  await page.locator("#est-zip").fill("29201");
+  await next.click();
+  for (const pick of ["25–64", "2", "Full coverage", "Good", "None"]) {
+    await page.locator(`.est-screen:not([hidden]) label.chip:has(input[value="${pick}"])`).click();
+  }
+  await expect(page.locator("#est-see")).toBeVisible();
+  await page.locator("#est-see").click();
+  await expect(page.locator('[data-need="first"].bad')).toBeVisible();
+  await page.locator("#est-first").fill("Testy");
+  await page.locator("#est-phone").fill("+1 803 555 0123");
+  await page.locator("#est-consent").check();
+  await page.locator("#est-see").click();
+  // 190 base × 1.9 (2 vehicles) = 361 → $255 – $470
+  await expect(page.locator("#est-low")).toHaveText("$255");
+  await expect(page.locator("#est-high")).toHaveText("$470");
+  expect(sent.length).toBe(1);
+  expect(sent[0]._subject).toMatch(/^Auto estimate lead: Testy — \(803\) 555-0123 \(SC 29201\)$/);
+  expect(sent[0]["Credit (self-reported)"]).toBe("Good");
+  await page.locator("#est-book").click();
+  await expect(page.locator("#est-day-g.bad")).toBeVisible();
+  await page.locator("#est-days label.chip").first().click();
+  await page.locator('label.chip:has(input[value="1–3 pm"])').click();
+  await page.locator("#est-book").click();
+  await expect(page.locator("#est-booked")).toBeVisible();
+  expect(sent.length).toBe(2);
+  expect(sent[1]._subject).toMatch(/^📞 Call requested: Testy — .+, 1–3 pm$/);
+});
+
+const LANDING = ["auto-estimate", "sr22-insurance-sc", "cheap-car-insurance-sc", "landlord-insurance-sc", "es", "refer", "partners"];
 for (const slug of LANDING) {
   test(`Landing page /${slug}/ loads with its links working`, async ({ page, request }) => {
     await page.goto(`/${slug}/`);

@@ -88,6 +88,8 @@ def chrome_bottom(p):
     call, text, quote = ("Llamar", "Mensaje", "Cotizar") if es else ("Call", "Text", "Get a quote")
     quote_href = "#solicitud" if es else p.get("quote_href", "/#quote")
     js = '<script src="/assets/pages.js" defer></script>\n' if p.get("form") else ""
+    if p.get("script"):
+        js += f'<script src="{p["script"]}" defer></script>\n'
     if es:
         foot_l = "Agencia de seguros independiente en Carolina del Sur"
         links = [("/", "Inicio"), ("/#auto", "Auto"), ("/#homeowners", "Casa"), ("/#renters", "Inquilino"), ("/#landlord", "Propiedad de alquiler"), ("/#business", "Negocio"), ("/sr22-insurance-sc/", "SR-22"), ("/", "English"), ("/#privacy", "Privacidad")]
@@ -96,7 +98,7 @@ def chrome_bottom(p):
         nav_l = "Pie de página"
     else:
         foot_l = "Independent insurance agency serving South Carolina"
-        links = [("/", "Home"), ("/#auto", "Auto"), ("/#homeowners", "Homeowners"), ("/#renters", "Renters"), ("/#landlord", "Landlord"), ("/#business", "Business"), ("/sr22-insurance-sc/", "SR-22 insurance"), ("/cheap-car-insurance-sc/", "Affordable car insurance"), ("/landlord-insurance-sc/", "Landlord insurance SC"), ("/refer/", "Refer a friend"), ("/partners/", "Partners"), ("/es/", "Español"), ("/#privacy", "Privacy policy")]
+        links = [("/", "Home"), ("/#auto", "Auto"), ("/#homeowners", "Homeowners"), ("/#renters", "Renters"), ("/#landlord", "Landlord"), ("/#business", "Business"), ("/auto-estimate/", "Auto estimate"), ("/sr22-insurance-sc/", "SR-22 insurance"), ("/cheap-car-insurance-sc/", "Affordable car insurance"), ("/landlord-insurance-sc/", "Landlord insurance SC"), ("/refer/", "Refer a friend"), ("/partners/", "Partners"), ("/es/", "Español"), ("/#privacy", "Privacy policy")]
         review = "★ Leave us a Google review"
         disc = "Coverage is subject to the terms, conditions and exclusions of the policy issued. Coverage, discounts and carrier availability vary. Quotes are not guaranteed, and requesting a quote does not bind coverage."
         nav_l = "Footer"
@@ -224,7 +226,7 @@ PAGES.append(dict(
     faq=car_faq,
     body=hero("Auto insurance · South Carolina", "Affordable car insurance in South Carolina",
               "One quote request, multiple carriers compared. We look for the coverage you need at a competitive price — so you don't have to call around.",
-              [("Compare my rates", "/#quote-auto", "btn-gold"), ("Call " + PHONE, "tel:" + TEL, "btn-ghost")])
+              [("Compare my rates", "/#quote-auto", "btn-gold"), ("Quick price estimate", "/auto-estimate/", "btn-ghost"), ("Call " + PHONE, "tel:" + TEL, "btn-ghost")])
     + '<section><div class="wrap"><h2>Ways drivers save</h2><p class="lead">Discounts and prices vary by insurance company. We check what you qualify for with each carrier we quote.</p>'
     + cards([
         ("Compare carriers", "Each company prices drivers differently. Shopping several is the most reliable way to save."),
@@ -361,6 +363,90 @@ PAGES.append(dict(
         "My client has agreed to a phone call or email from Conway Guardian Insurance Group about insurance.",
         "Send client", "Thanks — we've got it!", "We'll reach out to your client soon and keep you posted.")
     + "</div></section>\n",
+))
+
+
+# ---------------- Quick Auto Estimate (calculator) ----------------
+def radios(name, opts, need=True):
+    return ('<div class="chips" role="radiogroup" aria-labelledby="lbl-' + name + '">' +
+            "".join(f'<label class="chip"><input type="radio" name="{name}" value="{E(o)}" />{E(o)}</label>' for o in opts) + "</div>")
+
+
+def q_screen(name, title, opts, help_text=""):
+    h = f'<p class="est-help">{E(help_text)}</p>' if help_text else ""
+    return (f'<div class="est-screen" hidden><div data-need="{name}"><h2 id="lbl-{name}">{E(title)}</h2>{h}{radios(name, opts)}'
+            '<div class="est-err-msg" role="alert">Please pick one.</div></div></div>')
+
+
+est_body = (
+    hero("Quick auto estimate · South Carolina", "What could car insurance cost you?",
+         "Answer 6 quick questions and see an estimated monthly price range in about a minute. Like the number? Book a call and we'll get your exact price.",
+         [("Start my estimate", "#est-card", "btn-gold"), ("Call " + PHONE, "tel:" + TEL, "btn-ghost")])
+    + '<section><div class="wrap"><div id="est"><div class="est-card" id="est-card">'
+    + '<div class="est-head"><span>Auto estimate</span><span id="est-count" aria-live="polite"></span></div><div class="est-bar"><i id="est-bar"></i></div>'
+    # 1 ZIP
+    + '<div class="est-screen"><div data-need="zip"><h2 id="lbl-zip"><label for="est-zip">What\'s your ZIP code?</label></h2>'
+      '<p class="est-help">Prices vary by area.</p>'
+      '<div class="field" style="max-width:220px"><input id="est-zip" inputmode="numeric" maxlength="5" autocomplete="postal-code" placeholder="e.g. 29201" /></div>'
+      '<div class="est-err-msg" role="alert">Enter a 5-digit ZIP code.</div>'
+      '<p id="est-zip-note" class="est-help" hidden style="color:var(--danger)">We currently serve South Carolina only — but you can still see an estimate.</p></div></div>'
+    + q_screen("age", "Age of the youngest driver", ["Under 21", "21–24", "25–64", "65+"])
+    + q_screen("vehicles", "How many vehicles?", ["1", "2", "3", "4+"])
+    + q_screen("coverage", "What coverage do you want?", ["State minimum", "Full coverage", "Not sure"],
+               "Full coverage adds collision and comprehensive, which pay to fix your own car. Lenders usually require it.")
+    + q_screen("credit", "How would you describe your credit?", ["Excellent", "Good", "Fair", "Poor", "Not sure"],
+               "Just a best guess. Checking your estimate does not run a credit check or affect your credit.")
+    + q_screen("record", "Any accidents, tickets or claims in the last 3 years?", ["None", "1 ticket", "1 accident or claim", "2 or more", "DUI or SR-22 needed"])
+    # 7 contact
+    + '<div class="est-screen" hidden><h2>Where should we send your estimate?</h2><p class="est-help">Your estimate shows right away. An agent can then get your exact price.</p>'
+      '<div class="hp" aria-hidden="true"><label>Leave this empty <input name="cg_hp" tabindex="-1" autocomplete="off" /></label></div>'
+      '<div class="row two">'
+      '<div class="field" data-need="first"><label for="est-first">First name</label><input id="est-first" autocomplete="given-name" /><div class="est-err-msg" role="alert">Please enter your first name.</div></div>'
+      '<div class="field" data-need="phone"><label for="est-phone">Phone</label><input id="est-phone" type="tel" inputmode="tel" autocomplete="tel-national" placeholder="(803) 555-0123" /><div class="est-err-msg" role="alert">Enter a 10-digit phone number.</div></div>'
+      '</div>'
+      '<div data-need="consent"><label class="check"><input type="checkbox" id="est-consent" /> <span>I agree that Conway Guardian Insurance Group may contact me about my estimate and quote by phone, text message or email, including by automated means. Consent is not a condition of purchase. Message and data rates may apply. Reply STOP to opt out.</span></label>'
+      '<div class="est-err-msg" role="alert">Please check the box so we can follow up.</div></div>'
+      '<div style="margin-top:18px"><button type="button" class="btn btn-navy" id="est-see">See my estimate →</button></div>'
+      f'<div class="form-msg err" id="est-err" hidden role="alert" style="display:block">We couldn\'t load your estimate right now. Please try again or call <a href="tel:{TEL}">{PHONE}</a>.</div>'
+      '</div>'
+    # 8 result
+    + '<div class="est-screen" hidden><h2>Here\'s your estimate, <span id="est-name"></span></h2>'
+      '<div class="est-range"><div class="amt"><span id="est-low"></span> – <span id="est-high"></span></div><div class="per">per month · <span id="est-cov"></span></div></div>'
+      '<p class="est-help" id="est-cov-note" hidden style="text-align:center">You weren\'t sure about coverage, so this shows full coverage. We\'ll go over both options on your call.</p>'
+      '<div class="est-fine"><b>This is an estimate, not a quote.</b> It\'s a general range based on typical South Carolina prices for drivers who answered like you. Your actual price depends on the insurance company, your full driving record, your vehicles, your address and other details, and may be higher or lower. Coverage isn\'t bound until a policy is issued.</div>'
+      '<div class="est-sec" id="est-booking"><h3>Like the number? Book a quick call for your exact price.</h3>'
+      '<p class="est-help">An agent will call you at the time you pick, compare carriers and give you real quotes. It takes about 10–15 minutes.</p>'
+      '<div data-need="day" id="est-day-g"><b id="lbl-day" style="display:block;margin-top:6px">Pick a day</b><div class="chips" id="est-days" role="radiogroup" aria-labelledby="lbl-day"></div><div class="est-err-msg" role="alert">Pick a day.</div></div>'
+      '<div data-need="time" id="est-time-g" style="margin-top:14px"><b id="lbl-time" style="display:block">Pick a time (Eastern)</b>'
+      '<div class="chips" role="radiogroup" aria-labelledby="lbl-time">'
+      + "".join(f'<label class="chip"><input type="radio" name="time" value="{t}" />{t}</label>' for t in ["9–11 am", "11 am–1 pm", "1–3 pm", "3–5 pm"])
+      + '</div><div class="est-err-msg" role="alert">Pick a time.</div></div>'
+      '<div class="field" style="margin-top:14px"><label for="est-notes">Anything we should know? <span class="opt">(optional)</span></label><textarea id="est-notes" placeholder="e.g. current company, when your policy renews, vehicles you have"></textarea></div>'
+      '<div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px"><button type="button" class="btn btn-gold" id="est-book">Request this call</button>'
+      f'<a class="btn btn-ghost" href="tel:{TEL}">Or call now</a><a class="btn btn-ghost" href="/#quote-auto">Get a full quote online</a></div>'
+      f'<div class="form-msg err" id="est-book-err" hidden role="alert" style="display:block">We couldn\'t book that time. Please try again or call <a href="tel:{TEL}">{PHONE}</a>.</div>'
+      '</div>'
+      '<div class="done" id="est-booked" hidden role="status" style="display:block"><div class="tick">✓</div><h2>You\'re booked!</h2>'
+      '<p class="lead" style="margin:0 auto">We\'ll call you <b id="est-when"></b>. If you need to change it, call or text us at '
+      f'<a href="tel:{TEL}">{PHONE}</a>.</p></div>'
+      '</div>'
+    + '<div class="est-nav"><button type="button" class="back" id="est-back">← Back</button><button type="button" class="btn btn-navy" id="est-next">Next →</button></div>'
+    + '</div></div></div></section>\n'
+    + '<section><div class="wrap"><h2>What affects your price</h2>'
+    + cards([
+        ("Driving record", "Accidents, tickets and claims in the last few years usually have the biggest effect on price."),
+        ("Credit-based insurance score", "In South Carolina, many insurers use credit history when setting rates. Better credit often means a lower price."),
+        ("Age and experience", "Newer and younger drivers typically pay more until they build a driving history."),
+        ("Coverage and deductibles", "Full coverage costs more than the state minimum. A higher deductible can lower your premium."),
+        ("Vehicles", "The cars you drive, how many and how they're used all factor in."),
+        ("Where you live", "Rates differ by ZIP code across South Carolina."),
+    ]) + "</div></section>\n"
+)
+PAGES.append(dict(
+    slug="auto-estimate", quote_href="#est-card", script="/assets/estimate.js",
+    title="Car Insurance Cost Estimate for South Carolina Drivers | Conway Guardian",
+    desc="See an estimated monthly price range for car insurance in South Carolina in about a minute, then book a call with a local independent agent for your exact price.",
+    body=est_body,
 ))
 
 
