@@ -1645,7 +1645,7 @@
       const btn = $("#sendBtn"); btn.disabled = true; btn.textContent = "Sending…";
       try {
         const res = await fetch(quoteURL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
-        if (!res.ok) throw new Error(res.status);
+        await checkSent(res);
         showDone(subject, sections, true);
       } catch (err) {
         btn.disabled = false; btn.textContent = "Try again →";
@@ -1654,6 +1654,13 @@
     } else {
       showDone(subject, sections, false);
     }
+  }
+
+  // FormSubmit answers 200 even when it did not send (e.g. form not activated yet), so read its reply.
+  async function checkSent(res) {
+    if (!res.ok) throw new Error(res.status);
+    const data = await res.json().catch(() => ({}));
+    if (data.success === false || data.success === "false") throw new Error(data.message || "not sent");
   }
 
   function alertInline(before, msg) {
@@ -1706,7 +1713,7 @@
     if (contactURL) {
       try {
         const res = await fetch(contactURL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ _subject: subject, _replyto: em, name: n, email: em, phone: $("#cf-phone").value.trim(), topic, message: m }) });
-        if (!res.ok) throw 0;
+        await checkSent(res);
       } catch (x) { alertInline($("#contactForm").firstElementChild, "Couldn't send — please try again."); return; }
     }
     $("#contactPanel").innerHTML = '<div class="done"><div class="check">✓</div><h2>Message sent</h2><p>Thanks, ' + esc(n.split(" ")[0]) + ". We'll get back to you within one business day.</p>" +
