@@ -80,23 +80,21 @@ const EST = {
     return ok;
   }
 
-  async function post(data) {
-    const res = await fetch("https://formsubmit.co/ajax/" + C.LEAD_EMAIL, {
-      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify(Object.assign({ _template: "table", _captcha: "false" }, data)),
-    });
-    if (!res.ok) throw new Error(res.status);
-    const out = await res.json().catch(() => null);
-    if (!out || !(out.success === true || out.success === "true")) throw new Error("not sent");
-  }
-
-  function leadRows(a, r) {
-    return {
-      "Name": a.first, "Phone": a.phone, "ZIP": a.zip, "Youngest driver": a.age, "Vehicles": a.vehicles,
-      "Coverage wanted": a.coverage, "Credit (self-reported)": a.credit, "Accidents / tickets / claims (3 yrs)": a.record,
-      "Estimate shown": money(r.low) + " – " + money(r.high) + " per month (" + (r.cov === "minimum" ? "state minimum" : "full coverage") + ")",
-      "Consent to contact": "Yes — agreed to calls, texts & email",
-    };
+  // Build the lead email (branded, with a plain backup — see assets/lead-mail.js)
+  function lead(a, r, extra) {
+    const shown = money(r.low) + " – " + money(r.high) + " / month";
+    return Object.assign({
+      source: "Quick Auto Estimate",
+      name: a.first, phone: a.phone, location: "SC " + a.zip,
+      prefers: "Phone call",
+      tags: ["Auto", { text: "Estimate shown: " + shown, warm: true }],
+      sections: [{ title: "Their answers", rows: [
+        ["ZIP", a.zip], ["Youngest driver", a.age], ["Vehicles", a.vehicles], ["Coverage wanted", a.coverage],
+        ["Credit (self-reported)", a.credit], ["Accidents / tickets / claims (3 yrs)", a.record],
+        ["Estimate shown", shown + " (" + (r.cov === "minimum" ? "state minimum" : "full coverage") + ")"],
+      ] }],
+      footer: "Consent: agreed to calls, texts & email · Sent from conwayguardianins.com",
+    }, extra || {});
   }
 
   // Phone formatting
@@ -131,7 +129,7 @@ const EST = {
     if (!sentLead) {
       btn.disabled = true; btn.textContent = "One moment…";
       try {
-        await post(Object.assign({ _subject: "Auto estimate lead: " + a.first + " — " + a.phone + " (SC " + a.zip + ")" }, leadRows(a, r)));
+        await window.cgSend(lead(a, r, { badge: "AUTO ESTIMATE", subject: "Auto estimate lead: " + a.first + " — " + a.phone + " (SC " + a.zip + ")" }));
         sentLead = true;
         window.cgTrack && window.cgTrack("estimate_sent");
       } catch (x) {
@@ -166,11 +164,14 @@ const EST = {
     const btn = $("#est-book"), err = $("#est-book-err");
     btn.disabled = true; btn.textContent = "Booking…"; err.hidden = true;
     try {
-      await post(Object.assign({
-        _subject: "📞 Call requested: " + result.a.first + " — " + day.value + ", " + time.value,
-        "Call requested for": day.value + ", " + time.value + " (Eastern)",
-        "Notes from customer": $("#est-notes").value.trim() || "—",
-      }, leadRows(result.a, result.r)));
+      const L = lead(result.a, result.r, {
+        badge: "CALL BOOKED",
+        subject: "📞 Call requested: " + result.a.first + " — " + day.value + ", " + time.value,
+        prefers: day.value + ", " + time.value,
+      });
+      L.tags.unshift({ text: "Call: " + day.value + ", " + time.value + " ET", warm: true });
+      L.sections.unshift({ title: "Call booked", rows: [["When", day.value + ", " + time.value + " (Eastern)"], ["Notes from customer", $("#est-notes").value.trim() || "—"]] });
+      await window.cgSend(L);
       window.cgTrack && window.cgTrack("call_booked");
       $("#est-booking").hidden = true;
       const done = $("#est-booked");

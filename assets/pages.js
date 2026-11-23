@@ -53,25 +53,26 @@
       // Spam trap: real people never fill the hidden field
       if (form.querySelector('[name="cg_hp"]').value) { fail(); return; }
 
-      const data = { _subject: form.dataset.subject, _template: "table", _captcha: "false" };
+      // Build the lead: who to contact goes in the header, everything else in the details table
+      const lead = { badge: form.dataset.badge, subject: form.dataset.subject, source: document.title.split("|")[0].trim(), sections: [] };
+      const rows = [];
       form.querySelectorAll("[name]").forEach((el) => {
         if (el.name === "cg_hp" || el.type === "checkbox") return;
-        const label = el.dataset.label || el.name;
-        if (el.value.trim()) data[label] = el.value.trim();
+        const v = el.value.trim();
+        if (!v) return;
+        if (el.dataset.primary) lead[el.dataset.primary] = v;
+        rows.push([el.dataset.label || el.name, v]);
       });
-      if (consent) data["Consent"] = "Yes — " + consent.closest(".check").textContent.trim();
-      const em = form.querySelector('input[type="email"]');
-      if (em && em.value.trim()) data._replyto = em.value.trim();
+      if (lead.name) lead.subject += " — " + lead.name;
+      const sel = form.querySelector('select[name="coverage"], select[name="c_cov"], select[name="seguro"]');
+      if (sel && sel.value) lead.tags = [sel.value];
+      lead.sections.push({ title: "Details", rows });
+      if (consent) lead.footer = "Consent: " + consent.closest(".check").textContent.trim();
 
       const label = btn.textContent;
       btn.disabled = true; btn.textContent = T.sending; msg.className = "form-msg";
       try {
-        const res = await fetch("https://formsubmit.co/ajax/" + window.CG.LEAD_EMAIL, {
-          method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(data),
-        });
-        if (!res.ok) throw new Error(res.status);
-        const out = await res.json().catch(() => null);
-        if (!out || !(out.success === true || out.success === "true")) throw new Error((out && out.message) || "not sent");
+        await window.cgSend(lead);
         window.cgTrack && window.cgTrack(form.dataset.lead + "_sent");
         form.hidden = true;
         const done = document.getElementById(form.dataset.done);

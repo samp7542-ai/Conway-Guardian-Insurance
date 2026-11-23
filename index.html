@@ -21,6 +21,7 @@
 <link rel="alternate" hreflang="es" href="https://conwayguardianins.com/es/" />
 <link rel="alternate" hreflang="x-default" href="https://conwayguardianins.com/" />
 <script src="assets/site.js"></script>
+<script src="assets/lead-mail.js"></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"InsuranceAgency","@id":"https://conwayguardianins.com/#agency","name":"Conway Guardian Insurance Group","url":"https://conwayguardianins.com/","logo":"https://conwayguardianins.com/assets/logo-512.png","image":"https://conwayguardianins.com/assets/logo-512.png","telephone":"+1-803-768-0594","email":"conway@guardianinsagency.com","areaServed":{"@type":"State","name":"South Carolina"},"knowsLanguage":["en"],"description":"Independent insurance agency serving South Carolina. Auto, homeowners, renters, landlord and business insurance from multiple carriers."}</script>
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1646,13 +1647,14 @@
     if (!url) return;
     const name = $("#first").value.trim() + " " + $("#last").value.trim();
     const cov = selected().map(k => COVERAGE[k].short).join(" + ");
-    fetch(url, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({
-      _subject: "Quote started (not finished yet): " + cov + " — " + name,
-      _replyto: $("#email").value.trim(), _template: "table", _captcha: "false",
-      "Status": "This person started a quote and gave their contact info. If they finish, you'll get the full quote request in a separate email.",
-      "Coverage": cov, "Name": name, "Phone": $("#phone").value.trim(), "Email": $("#email").value.trim(),
-      "Consent to contact": "Yes — agreed to calls, texts & email",
-    }) }).catch(() => {});
+    window.cgSend({
+      badge: "QUOTE STARTED", source: "Quote form (not finished yet)",
+      subject: "Quote started (not finished yet): " + cov + " — " + name,
+      name, phone: $("#phone").value.trim(), email: $("#email").value.trim(),
+      tags: selected().map(k => COVERAGE[k].short),
+      sections: [{ title: "Status", rows: [["What happened", "Started a quote and gave contact info. If they finish, the full request arrives in a separate email."], ["Coverage", cov]] }],
+      footer: "Consent: agreed to calls, texts & email · Sent from conwayguardianins.com",
+    }).catch(() => {});
   }
 
   let editing = false; // true after "Edit" on the review page
@@ -1817,12 +1819,20 @@
 
     const quoteURL = endpointFor(QUOTE_FORM_ID);
     if (quoteURL) {
-      const payload = { _subject: subject, _replyto: $("#email").value.trim(), _template: "table", _captcha: "false" };
-      sections.forEach(s => s.rows.forEach(r => { payload[s.title + " — " + r[0]] = r[1]; }));
+      const renew = answerOf("renewal");
+      const prefers = [answerOf("contactPref"), answerOf("bestTime")].filter(Boolean).join(" · ");
+      const lead = {
+        badge: "NEW QUOTE REQUEST", source: "Quote form", subject,
+        name, phone: $("#phone").value.trim(), email: $("#email").value.trim(),
+        location: [$("#city").value.trim(), "SC " + $("#zip").value.trim()].filter(Boolean).join(", "),
+        prefers: prefers || "—",
+        tags: selected().map(k => COVERAGE[k].short).concat(renew ? [{ text: "Renews: " + [renew, fmtDate($("#renewDate").value)].filter(Boolean).join(" · "), warm: true }] : []),
+        sections: sections.filter(s => s.key !== "coverage"),
+        footer: "Consent: agreed to calls, texts & email · Sent from conwayguardianins.com",
+      };
       const btn = $("#sendBtn"); btn.disabled = true; btn.textContent = "Sending…";
       try {
-        const res = await fetch(quoteURL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(payload) });
-        await checkSent(res);
+        await window.cgSend(lead);
         const se = $("#sendErr"); if (se) se.classList.remove("show");
         window.cgTrack && window.cgTrack("quote_sent", { coverage: selected().join(",") });
         showDone(subject, sections, true);
@@ -1901,8 +1911,12 @@
       if ($("#cf-website").value) { alertInline($("#cfSend"), "We couldn't send your message.", "cfErr"); return; }
       btn.disabled = true; btn.textContent = "Sending…";
       try {
-        const res = await fetch(contactURL, { method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify({ _subject: subject, _replyto: em, _captcha: "false", name: n, email: em, phone: $("#cf-phone").value.trim(), topic, message: m }) });
-        await checkSent(res);
+        await window.cgSend({
+          badge: "CONTACT MESSAGE", source: "Contact page", subject,
+          name: n, phone: $("#cf-phone").value.trim(), email: em,
+          tags: [topic],
+          sections: [{ title: "Message", rows: [["Topic", topic], ["Message", m]] }],
+        });
         window.cgTrack && window.cgTrack("contact_sent");
       } catch (x) {
         btn.disabled = false; btn.textContent = "Send message";

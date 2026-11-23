@@ -50,7 +50,7 @@ test.beforeEach(async ({ page, baseURL }) => {
   page.__problems = problems;
 
   // Never send real leads to the agency while testing: answer form sends with a fake "OK".
-  await page.route(/(formsubmit\.co|formspree\.io)/, (route) =>
+  await page.route(/(formsubmit\.co|formspree\.io|api\.emailjs\.com)/, (route) =>
     route.fulfill({ status: 200, contentType: "application/json", body: JSON.stringify({ success: "true", ok: true }) }));
 });
 
@@ -375,8 +375,9 @@ test("Quote form blocks Continue until required questions are answered", async (
 
 test("Quote form emails a 'quote started' lead as soon as contact info is given", async ({ page }) => {
   const sent = [];
-  await page.route(/formsubmit\.co/, async (route) => {
-    sent.push(JSON.parse(route.request().postData() || "{}"));
+  await page.route(/(formsubmit\.co|api\.emailjs\.com)/, async (route) => {
+    const b = JSON.parse(route.request().postData() || "{}");
+    sent.push(b.template_params ? Object.assign({ _subject: b.template_params.subject }, b.template_params) : b);
     await route.fulfill({ status: 200, contentType: "application/json", body: '{"success":"true"}' });
   });
   await open(page, "quote");
@@ -386,7 +387,8 @@ test("Quote form emails a 'quote started' lead as soon as contact info is given"
   await expect(page.locator("#wizName")).toHaveText(/Auto/);
   await expect.poll(() => sent.length).toBe(1);
   expect(sent[0]._subject).toMatch(/^Quote started \(not finished yet\): Auto — Testy McTester$/);
-  expect(sent[0].Phone).toBeTruthy();
+  expect(sent[0].phone).toBeTruthy();
+  expect(sent[0].badge).toBe("QUOTE STARTED");
 });
 
 test("Links from landing pages pre-select the coverage (#quote-auto)", async ({ page }) => {
@@ -433,8 +435,9 @@ test("On-screen Back and the browser's Back agree", async ({ page }) => {
 
 test("Quick auto estimate: shows a price range, emails the lead and books a call", async ({ page }) => {
   const sent = [];
-  await page.route(/formsubmit\.co/, async (route) => {
-    sent.push(JSON.parse(route.request().postData() || "{}"));
+  await page.route(/(formsubmit\.co|api\.emailjs\.com)/, async (route) => {
+    const b = JSON.parse(route.request().postData() || "{}");
+    sent.push(b.template_params ? Object.assign({ _subject: b.template_params.subject }, b.template_params) : b);
     await route.fulfill({ status: 200, contentType: "application/json", body: '{"success":"true"}' });
   });
   await page.goto("/auto-estimate/");
@@ -458,7 +461,8 @@ test("Quick auto estimate: shows a price range, emails the lead and books a call
   await expect(page.locator("#est-high")).toHaveText("$470");
   expect(sent.length).toBe(1);
   expect(sent[0]._subject).toMatch(/^Auto estimate lead: Testy — \(803\) 555-0123 \(SC 29201\)$/);
-  expect(sent[0]["Credit (self-reported)"]).toBe("Good");
+  expect(sent[0].details_html).toContain("Credit (self-reported)");
+  expect(sent[0].badge).toBe("AUTO ESTIMATE");
   await page.locator("#est-book").click();
   await expect(page.locator("#est-day-g.bad")).toBeVisible();
   await page.locator("#est-days label.chip").first().click();
@@ -467,6 +471,20 @@ test("Quick auto estimate: shows a price range, emails the lead and books a call
   await expect(page.locator("#est-booked")).toBeVisible();
   expect(sent.length).toBe(2);
   expect(sent[1]._subject).toMatch(/^📞 Call requested: Testy — .+, 1–3 pm$/);
+});
+
+test("If the branded email service is down, leads still go out through the backup", async ({ page }) => {
+  test.setTimeout(180_000);
+  const backup = [];
+  await page.route(/api\.emailjs\.com/, (route) => route.fulfill({ status: 500, body: "down" }));
+  await page.route(/formsubmit\.co/, async (route) => {
+    backup.push(JSON.parse(route.request().postData() || "{}"));
+    await route.fulfill({ status: 200, contentType: "application/json", body: '{"success":"true"}' });
+  });
+  await open(page, "quote");
+  await runQuoteFromHere(page, ["renters"]);
+  await expect(page.locator("#quoteDone")).toBeVisible();
+  expect(backup.some((b) => /^New quote request: Renters/.test(b._subject))).toBe(true);
 });
 
 const LANDING = ["auto-estimate", "sr22-insurance-sc", "cheap-car-insurance-sc", "landlord-insurance-sc", "es", "refer", "partners"];

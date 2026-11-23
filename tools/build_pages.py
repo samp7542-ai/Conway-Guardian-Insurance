@@ -87,7 +87,9 @@ def chrome_bottom(p):
     es = p.get("lang") == "es"
     call, text, quote = ("Llamar", "Mensaje", "Cotizar") if es else ("Call", "Text", "Get a quote")
     quote_href = "#solicitud" if es else p.get("quote_href", "/#quote")
-    js = '<script src="/assets/pages.js" defer></script>\n' if p.get("form") else ""
+    js = '<script src="/assets/lead-mail.js" defer></script>\n' if (p.get("form") or p.get("script")) else ""
+    if p.get("form"):
+        js += '<script src="/assets/pages.js" defer></script>\n'
     if p.get("script"):
         js += f'<script src="{p["script"]}" defer></script>\n'
     if es:
@@ -142,12 +144,12 @@ def band(h, p, ctas):
     return f'<section><div class="wrap"><div class="band"><div><h2>{E(h)}</h2><p class="lead">{E(p)}</p></div><div class="ctas" style="display:flex;gap:10px;flex-wrap:wrap">{btns}</div></div></div></section>\n'
 
 
-def field(name, label, kind="text", required=True, ac="", opts=None, es=False, data_label=None, ph=""):
+def field(name, label, kind="text", required=True, ac="", opts=None, es=False, data_label=None, ph="", primary=""):
     fid = "f-" + name
     opt = "" if required else (' <span class="opt">(opcional)</span>' if es else ' <span class="opt">(optional)</span>')
     req = " required" if required else ""
     acs = f' autocomplete="{ac}"' if ac else ""
-    dl = f' data-label="{E(data_label or label)}"'
+    dl = f' data-label="{E(data_label or label)}"' + (f' data-primary="{primary}"' if primary else "")
     phs = f' placeholder="{E(ph)}"' if ph else ""
     if kind == "select":
         choose = "Seleccione…" if es else "Choose…"
@@ -167,7 +169,7 @@ def form(kind, subject, title, intro, body, consent, button, done_title, done_te
     msg = '<div class="form-msg" role="alert"></div>'
     return f"""<div class="form-card" id="{'solicitud' if es else 'form'}">
   <h2>{E(title)}</h2><p class="lead">{E(intro)}</p>
-  <form data-lead="{kind}" data-subject="{E(subject)}" data-done="done-{kind}" novalidate>
+  <form data-lead="{kind}" data-subject="{E(subject)}" data-badge="{E(BADGES.get(kind, 'NEW LEAD'))}" data-done="done-{kind}" novalidate>
     <div class="hp" aria-hidden="true"><label>Leave this empty <input name="cg_hp" tabindex="-1" autocomplete="off" /></label></div>
     {body}
     <label class="check"><input type="checkbox" required /> <span>{E(consent)}</span></label>
@@ -180,6 +182,7 @@ def form(kind, subject, title, intro, body, consent, button, done_title, done_te
 """
 
 
+BADGES = {"spanish": "SPANISH-PAGE REQUEST", "referral": "NEW REFERRAL", "partner": "PARTNER REFERRAL"}
 COV_EN = ["Auto", "Homeowners", "Renters", "Landlord / rental property", "Business / commercial", "Not sure yet"]
 COV_ES = ["Auto", "Casa (propietario)", "Inquilino (renta)", "Propiedad de alquiler", "Negocio / comercial", "No estoy seguro"]
 
@@ -270,11 +273,11 @@ PAGES.append(dict(
 
 # ---------------- Spanish ----------------
 es_body = (
-    field("nombre", "Nombre completo", ac="name", es=True, data_label="Nombre")
-    + '<div class="row two">' + field("telefono", "Teléfono", kind="tel", ac="tel", es=True, data_label="Teléfono")
-    + field("correo", "Correo electrónico", kind="email", required=False, ac="email", es=True, data_label="Correo") + "</div>"
+    field("nombre", "Nombre completo", ac="name", es=True, data_label="Nombre", primary="name")
+    + '<div class="row two">' + field("telefono", "Teléfono", kind="tel", ac="tel", es=True, data_label="Teléfono", primary="phone")
+    + field("correo", "Correo electrónico", kind="email", required=False, ac="email", es=True, data_label="Correo", primary="email") + "</div>"
     + field("seguro", "¿Qué seguro necesita?", kind="select", opts=COV_ES, es=True, data_label="Seguro")
-    + field("ciudad", "Ciudad", required=False, ac="address-level2", es=True, data_label="Ciudad")
+    + field("ciudad", "Ciudad", required=False, ac="address-level2", es=True, data_label="Ciudad", primary="location")
     + field("mensaje", "Mensaje", kind="textarea", required=False, es=True, data_label="Mensaje", ph="Cuéntenos un poco sobre lo que necesita")
 )
 PAGES.append(dict(
@@ -307,9 +310,9 @@ ref_body = (
     + '<div class="row two">' + field("your_name", "Your name", ac="name", data_label="Referred by — name")
     + field("your_phone", "Your phone", kind="tel", ac="tel", data_label="Referred by — phone") + "</div></fieldset>"
     + "<fieldset><legend>Who are you referring?</legend>"
-    + '<div class="row two">' + field("friend_name", "Their name", data_label="Friend — name")
-    + field("friend_phone", "Their phone", kind="tel", data_label="Friend — phone") + "</div>"
-    + field("friend_email", "Their email", kind="email", required=False, data_label="Friend — email")
+    + '<div class="row two">' + field("friend_name", "Their name", data_label="Friend — name", primary="name")
+    + field("friend_phone", "Their phone", kind="tel", data_label="Friend — phone", primary="phone") + "</div>"
+    + field("friend_email", "Their email", kind="email", required=False, data_label="Friend — email", primary="email")
     + field("coverage", "What do they need?", kind="select", opts=COV_EN, data_label="Coverage needed")
     + field("notes", "Anything we should know?", kind="textarea", required=False, data_label="Notes") + "</fieldset>"
 )
@@ -337,9 +340,9 @@ partner_body = (
     + '<div class="row two">' + field("p_phone", "Your phone", kind="tel", ac="tel", data_label="Partner — phone")
     + field("p_email", "Your email", kind="email", ac="email", data_label="Partner — email") + "</div></fieldset>"
     + "<fieldset><legend>Your client</legend>"
-    + '<div class="row two">' + field("c_name", "Client name", data_label="Client — name")
-    + field("c_phone", "Client phone", kind="tel", data_label="Client — phone") + "</div>"
-    + field("c_email", "Client email", kind="email", required=False, data_label="Client — email")
+    + '<div class="row two">' + field("c_name", "Client name", data_label="Client — name", primary="name")
+    + field("c_phone", "Client phone", kind="tel", data_label="Client — phone", primary="phone") + "</div>"
+    + field("c_email", "Client email", kind="email", required=False, data_label="Client — email", primary="email")
     + '<div class="row two">' + field("c_cov", "Coverage needed", kind="select", opts=COV_EN, data_label="Client — coverage")
     + field("c_date", "Closing / purchase date", kind="date", required=False, data_label="Client — closing or purchase date") + "</div>"
     + field("c_notes", "Notes", kind="textarea", required=False, data_label="Notes", ph="Property address, vehicle, lender requirements, deadline…") + "</fieldset>"

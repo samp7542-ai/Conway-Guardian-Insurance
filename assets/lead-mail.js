@@ -74,4 +74,24 @@
     if (!res.ok) throw new Error("EmailJS " + res.status + " " + (await res.text().catch(() => "")));
     return true;
   };
+
+  // Send a lead: branded email through EmailJS first; if that fails for any reason,
+  // fall back to the plain FormSubmit email so no lead is ever lost.
+  window.cgSend = async function (lead) {
+    try { await window.cgLeadMail(lead); return "emailjs"; } catch (e) { /* fall through */ }
+    const to = (window.CG && window.CG.LEAD_EMAIL) || "conway@guardianinsagency.com";
+    const data = { _subject: lead.subject, _template: "table", _captcha: "false" };
+    if (lead.email) data._replyto = lead.email;
+    [["Name", lead.name], ["Phone", lead.phone], ["Email", lead.email], ["Location", lead.location], ["Prefers", lead.prefers]]
+      .forEach(([k, v]) => { if (v) data[k] = v; });
+    (lead.sections || []).forEach((sec) => (sec.rows || []).forEach((r) => { data[sec.title + " — " + r[0]] = r[1]; }));
+    if (lead.footer) data["Note"] = lead.footer;
+    const res = await fetch("https://formsubmit.co/ajax/" + to, {
+      method: "POST", headers: { "Content-Type": "application/json", Accept: "application/json" }, body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error("FormSubmit " + res.status);
+    const out = await res.json().catch(() => null);
+    if (!out || !(out.success === true || out.success === "true")) throw new Error("not sent");
+    return "formsubmit";
+  };
 })();
