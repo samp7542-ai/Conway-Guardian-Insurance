@@ -51,7 +51,7 @@ def head(p):
 <meta property="og:title" content="{E(p['title'])}" />
 <meta property="og:description" content="{E(p['desc'])}" />
 <meta property="og:url" content="{url}" />
-<meta property="og:image" content="{SITE}/assets/og-image.jpg" />
+<meta property="og:image" content="{SITE}/assets/og-share-2026.jpg" />
 <meta name="twitter:card" content="summary" />
 <link rel="icon" type="image/png" href="/assets/favicon-64.png" />
 <link rel="apple-touch-icon" href="/assets/apple-touch-icon.png" />
